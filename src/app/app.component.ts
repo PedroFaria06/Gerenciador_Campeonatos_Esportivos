@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { LoginComponent } from './login/login.component';  
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  standalone: true,  
+  imports: [LoginComponent]  
 })
 export class AppComponent {
-  title = 'Gerenciador_Esportivo';
+  title = 'Gerenciador Esportivo';
 }
