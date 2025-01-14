@@ -1,5 +1,6 @@
 package com.soccer.championship.domain.entity;
 
+import com.soccer.championship.domain.MatchStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
