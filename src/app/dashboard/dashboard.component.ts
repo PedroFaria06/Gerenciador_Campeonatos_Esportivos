@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';  // Adicione esta linha
+import { CommonModule } from '@angular/common';
 import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  standalone: true,  // Apenas se o componente for standalone
-  imports: [CommonModule]  // Adicione o CommonModule aqui
+  standalone: true,
+  imports: [CommonModule]  
 })
 export class DashboardComponent implements OnInit {
   partidas: any[] = [];
