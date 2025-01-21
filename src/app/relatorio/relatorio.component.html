@@ -35,19 +35,19 @@
           <label for="campeonato">Selecione o campeonato:</label>
           <select id="campeonato">
             <option value="" disabled selected>Selecione o campeonato</option>
-            <!-- Adicione opções aqui -->
+            <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">{{ campeonato.nome }}</option>
           </select>
 
           <label for="etapa">Selecione a etapa:</label>
           <select id="etapa">
             <option value="" disabled selected>Selecione a etapa</option>
-            <!-- Adicione opções aqui -->
+            <option *ngFor="let etapa of etapas" [value]="etapa.id">{{ etapa.nome }}</option>
           </select>
 
           <label for="jogo">Selecione o jogo:</label>
           <select id="jogo">
             <option value="" disabled selected>Selecione o jogo</option>
-            <!-- Adicione opções aqui -->
+            <option *ngFor="let jogo of jogos" [value]="jogo.id">{{ jogo.nome }}</option>
           </select>
 
           <!-- Checkboxes -->
