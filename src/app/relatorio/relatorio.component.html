@@ -1,24 +1,24 @@
 <div class="relatorio-container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">LOGO</div>
-        <ul class="menu">
-          <li>Dashboard</li>
-          <li>Times e Atletas</li>
-          <li>Campeonatos</li>
-          <li>Jogos</li>
-          <li>Súmula</li>
-          <li>Classificação</li>
-          <li>Relatórios</li>
-        </ul>
-    </div>
-    
-    <!-- Main Content -->
-    <div class="content">
-      <!-- Header -->
-      <div class="header">
-        <button class="menu-button">☰</button>
-        <div class="profile-icon">👤</div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+      <div class="logo">LOGO</div>
+      <ul class="menu">
+        <li>Dashboard</li>
+        <li>Times e Atletas</li>
+        <li>Campeonatos</li>
+        <li>Jogos</li>
+        <li>Súmula</li>
+        <li>Classificação</li>
+        <li>Relatórios</li>
+      </ul>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <div class="header">
+      <button class="menu-button" (click)="toggleForm()">☰</button>
+      <div class="profile-icon">👤</div>
     </div>
 
     <!-- Grid Layout -->
@@ -26,7 +26,47 @@
       <!-- Label relatório -->
       <div class="relatorio">
         <h2>Relatório Geral</h2>
-        <button id="menu-button">☰</button>
+        <button id="menu-button" (click)="toggleForm()">Visualizar</button>
+      </div>
+
+      <!-- Formulário -->
+      <div *ngIf="formVisible" class="form-container">
+        <form>
+          <label for="campeonato">Selecione o campeonato:</label>
+          <select id="campeonato">
+            <option value="" disabled selected>Selecione o campeonato</option>
+            <!-- Adicione opções aqui -->
+          </select>
+
+          <label for="etapa">Selecione a etapa:</label>
+          <select id="etapa">
+            <option value="" disabled selected>Selecione a etapa</option>
+            <!-- Adicione opções aqui -->
+          </select>
+
+          <label for="jogo">Selecione o jogo:</label>
+          <select id="jogo">
+            <option value="" disabled selected>Selecione o jogo</option>
+            <!-- Adicione opções aqui -->
+          </select>
+
+          <!-- Checkboxes -->
+          <div class="checkbox-container">
+            <label for="sumula">
+              <input type="checkbox" id="sumula"> Trazer súmula(s)
+            </label>
+            <label for="classificacao">
+              <input type="checkbox" id="classificacao"> Trazer classificação
+            </label>
+          </div>
+
+          <!-- Botões -->
+          <div class="button-container">
+            <button type="button" class="btn visualizar">Visualizar</button>
+            <button type="button" class="btn cancelar" (click)="toggleForm()">Cancelar</button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
 </div>
