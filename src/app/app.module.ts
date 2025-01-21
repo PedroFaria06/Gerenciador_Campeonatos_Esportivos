@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RelatorioComponent } from './relatorio/relatorio.component'; // Importando RelatorioComponent
+import { TeamsAndAthletesComponent } from './teams-and-athletes/teams-and-athletes.component';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { RelatorioComponent } from './relatorio/relatorio.component'; // Importa
       LoginComponent,
       CadastroComponent,
       DashboardComponent,
+      TeamsAndAthletesComponent,
       RelatorioComponent // Adicionando RelatorioComponent
     ],
     declarations: [ // Adicionando seção de declarações

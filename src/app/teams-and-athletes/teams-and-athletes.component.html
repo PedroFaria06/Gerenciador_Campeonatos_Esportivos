@@ -1,0 +1,137 @@
+<div class="container">
+    <header class="header">
+        <div class="menu-logo">
+            <img src="assets/images/menu_btn.png" alt="menu" class="menu-btn">
+            <div class="logo">
+                <h1>LOGO</h1>
+            </div>
+        </div>
+        <img src="assets/images/profile_icon.png" alt="profile" class="profile">
+    </header>
+
+    <div class="aside-content">
+        <aside class="sidebar">
+            <ul class="menu">
+                <li>Dashboard</li>
+                <li class="active">Times e Atletas</li>
+                <li>Campeonatos</li>
+                <li>Jogos</li>
+                <li>Súmula</li>
+                <li>Classificação</li>
+                <li>Relatórios</li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <button class="register-btn" (click)="openModal('Cadastrar Time')">CADASTRAR</button>
+
+            <div class="card" *ngFor="let team of teamsWithAthletes">
+                <div class="shield-team">
+                    <div class="shield"></div>
+                    <h1 class="team-name">{{ team.name }}</h1>
+                </div>
+                <div class="divider"></div>
+                <div class="arrow-options">
+                    <button class="option-btn" (click)="toggleOptionsMenu($event)">Opções</button>
+                    <div class="options-menu">
+                        <button (click)="openModal('Editar Time')">Editar</button>
+                        <button (click)="openRemoveModal(team)">Remover</button>
+                    </div>
+                    <span class="material-symbols-outlined arrow-icon" (click)="toggleExpand(team)">
+                        arrow_back_ios
+                    </span>
+                </div>
+                <div class="expandable" [class.expanded]="team.isExpanded">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Nome</th>
+                                <th>Posição</th>
+                                <th>Altura</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let athlete of team.athletes">
+                                <td>{{ athlete.number }}</td>
+                                <td>{{ athlete.name }}</td>
+                                <td>{{ athlete.position }}</td>
+                                <td>{{ athlete.height }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" *ngIf="isModalOpen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="btnClose-label">
+                    <span class="close-btn" (click)="closeModal()">&times;</span>
+                    <h2>{{ modalTitle }}</h2>
+                </div>
+                <button class="save-btn" (click)="saveTeam()">Salvar</button>
+            </div>
+
+            <form class="modal-body">
+                <input id="team-name" type="text" [(ngModel)]="newTeam.name" name="teamName" maxlength="20"
+                    placeholder="Nome do Time" />
+
+                <input id="coach-name" type="text" [(ngModel)]="newTeam.coachName" name="coachName" maxlength="20"
+                    placeholder="Nome do Técnico" />
+
+                <input id="player-count" type="number" [(ngModel)]="newTeam.playerCount" name="playerCount" max="20"
+                    maxlength="2" placeholder="Quantidade de Jogadores" (change)="generatePlayerFields()" />
+            </form>
+
+            <div *ngIf="players.length > 0" class="modal-table">
+                <table class="player-table">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Nome</th>
+                            <th>Posição</th>
+                            <th>Altura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let player of players; let i = index">
+                            <td>
+                                <input type="number" [(ngModel)]="player.number" [name]="'playerNumber' + i" max="99"
+                                    placeholder="Número" />
+                            </td>
+                            <td>
+                                <input type="text" [(ngModel)]="player.name" [name]="'playerName' + i" maxlength="50"
+                                    placeholder="Nome" />
+                            </td>
+                            <td>
+                                <input type="text" [(ngModel)]="player.position" [name]="'playerPosition' + i"
+                                    maxlength="50" placeholder="Posição" />
+                            </td>
+                            <td>
+                                <input type="text" [(ngModel)]="player.height" [name]="'playerHeight' + i" maxlength="4"
+                                    placeholder="Altura" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirmation-modal" *ngIf="isRemoveModalOpen">
+        <div class="modal-remove-content">
+            <h2>Remover time</h2>
+            <p>
+                Não será mais possível recuperar o que for removido. Você tem certeza que deseja remover este time?
+            </p>
+            <div class="modal-actions">
+                <button class="cancel-btn" (click)="closeRemoveModal()">Cancelar</button>
+                <button class="remove-btn" (click)="confirmRemove()">Remover</button>
+            </div>
+        </div>
+    </div>
+
+</div>
