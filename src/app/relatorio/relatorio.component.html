@@ -62,11 +62,18 @@
 
           <!-- Botões -->
           <div class="button-container">
-            <button type="button" class="btn visualizar">Visualizar</button>
+            <button type="button" class="btn visualizar" (click)="openModal()">Visualizar</button>
             <button type="button" class="btn cancelar" (click)="toggleForm()">Cancelar</button>
           </div>
         </form>
       </div>
+    </div>
+  </div>
+  <div *ngIf="isModalVisible" class="modal-overlay">
+    <div class="modal-box">
+      <h2>Detalhes do Relatório</h2>
+      <p>Conteúdo do relatório será exibido aqui...</p>
+      <button class="btn fechar" (click)="closeModal()">Fechar</button>
     </div>
   </div>
 </div>

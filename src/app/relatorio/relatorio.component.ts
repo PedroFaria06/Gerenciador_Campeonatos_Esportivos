@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class RelatorioComponent {
   formVisible = false;
+  isModalVisible = false;
 
   campeonatos = [
     { id: 0, nome: 'Todos' },
@@ -34,5 +35,13 @@ export class RelatorioComponent {
 
   toggleForm() {
     this.formVisible = !this.formVisible;
+  }
+
+  openModal() {
+    this.isModalVisible = true;
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
   }
 }
