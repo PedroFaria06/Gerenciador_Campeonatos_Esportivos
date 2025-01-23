@@ -12,11 +12,9 @@ export class LoginComponent {
   email: string = '';  
   password: string = '';  
 
-
   onSubmit() {
     console.log('Email:', this.email);
     console.log('Password:', this.password);
-
 
     if (this.email === 'usuario@exemplo.com' && this.password === 'senha123') {
       console.log('Login bem-sucedido!');
