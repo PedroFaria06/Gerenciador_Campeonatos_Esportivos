@@ -1,1 +1,29 @@
-<p>times works!</p>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">LOGO</div>
+      <ul class="menu">
+        <li>Dashboard</li>
+        <li class="active">Times e Atletas</li>
+        <li>Campeonatos</li>
+        <li>Jogos</li>
+        <li>Súmula</li>
+        <li>Classificação</li>
+        <li>Relatórios</li>
+      </ul>
+    </div>
+  
+    <!-- Conteúdo Principal -->
+    <div class="content">
+      <h1>Times e Atletas</h1>
+      <div class="times-container">
+        <ul class="times-list">
+          <li *ngFor="let time of times" class="time-item">
+            <span class="time-name">{{ time }}</span>
+            <button class="time-options">Opções</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
