@@ -7,18 +7,17 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { CampeonatoComponent } from './campeonato/campeonato.component'; // Importando CampeonatoComponent
 
 @NgModule({
     imports: [
       BrowserModule,
       RouterModule.forRoot([]),
-      // Não coloque o AppComponent aqui
-      AppComponent, // Importando diretamente
+      AppComponent, 
       LoginComponent,
       CadastroComponent,
-      DashboardComponent
+      DashboardComponent,
+      CampeonatoComponent 
     ]
-    // Não há necessidade do AppComponent aqui
-  })
-  export class AppModule { }
-  
+})
+export class AppModule { }
