@@ -1,121 +1,130 @@
 <div class="dashboard-container">
-    <!-- Sidebar -->
-    <div class="sidebar">
+  <!-- Sidebar -->
+  <div class="sidebar">
       <div class="logo">LOGO</div>
       <ul class="menu">
-        <li>Dashboard</li>
-        <li>Times e Atletas</li>
-        <li>Campeonatos</li>
-        <li>Jogos</li>
-        <li>Súmula</li>
-        <li>Classificação</li>
-        <li>Relatórios</li>
+          <li class="active">Dashboard</li>
+          <li>Times e Atletas</li>
+          <li>Campeonatos</li>
+          <li>Jogos</li>
+          <li>Súmula</li>
+          <li>Classificação</li>
+          <li>Relatórios</li>
       </ul>
-    </div>
-  
-    <!-- Main Content -->
-    <div class="content">
-      <!-- Header -->
-      <div class="header">
-        <button class="menu-button">☰</button>
-        <div class="profile-icon">👤</div>
-      </div>
-  
-      <!-- Grid Layout -->
-      <div class="dashboard-grid">
-        <!-- Partidas -->
-        <div class="partidas">
-          <h2>Partidas</h2>
-          <div *ngFor="let partida of partidas">
-            <h3>{{ partida.status }}</h3>
-            <div class="partida">
-              <span>{{ partida.data }}</span>
-              <div>{{ partida.time1 }} <span>X</span> {{ partida.time2 }}</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Próximos Jogos -->
-        <div class="proximos-jogos">
-          <h2>Próximos Jogos</h2>
-          <div class="calendario">
-            <p><strong>Novembro 2024</strong></p>
-            <!-- Simulação de calendário -->
-            <div class="dias">
-              <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sab</span>
-            </div>
-            <div class="datas">
-              <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
-              <span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
-              <span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span>
-              <span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span>
-              <span>29</span><span>30</span>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Ranking de Times -->
-        <div class="ranking-times">
-          <h2>Ranking de Times</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Time</th>
-                <th>Pontos</th>
-                <th>%</th>
-                <th>Jogos</th>
-                <th>Vitórias</th>
-                <th>Empates</th>
-                <th>Derrotas</th>
-                <th>GP</th>
-                <th>GC</th>
-                <th>SG</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let time of rankingTimes">
-                <td>{{ time.posicao }}</td>
-                <td>{{ time.time }}</td>
-                <td>{{ time.pontos }}</td>
-                <td>{{ time.percentual }}</td>
-                <td>{{ time.jogos }}</td>
-                <td>{{ time.vitorias }}</td>
-                <td>{{ time.empates }}</td>
-                <td>{{ time.derrotas }}</td>
-                <td>{{ time.gp }}</td>
-                <td>{{ time.gc }}</td>
-                <td>{{ time.sg }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-  
-        <!-- Ranking de Artilheiros -->
-        <div class="ranking-artilheiros">
-          <h2>Ranking de Artilheiros</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Jogador</th>
-                <th>Jogos</th>
-                <th>Média</th>
-                <th>Gols</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let jogador of rankingArtilheiros">
-                <td>{{ jogador.posicao }}</td>
-                <td>{{ jogador.jogador }}</td>
-                <td>{{ jogador.jogos }}</td>
-                <td>{{ jogador.media }}</td>
-                <td>{{ jogador.gols }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
   </div>
-  
+
+  <!-- Conteúdo Principal -->
+  <div class="content">
+      <div class="grid-container">
+          <!-- Partidas -->
+          <div class="partidas">
+              <h2>Partidas</h2>
+              <div class="partida-card">
+                  <span class="status">Em andamento</span>
+                  <p class="date">02/11/2024 | 14:00</p>
+                  <div class="game">
+                      <div class="team">TIME 1</div>
+                      <span>X</span>
+                      <div class="team">TIME 2</div>
+                  </div>
+              </div>
+              <div class="partida-card">
+                  <span class="status">Próximas</span>
+                  <p class="date">15/11/2024 | 17:00</p>
+                  <div class="game">
+                      <div class="team">TIME 1</div>
+                      <span>X</span>
+                      <div class="team">TIME 2</div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Ranking de Times -->
+          <div class="ranking-times">
+              <h2>Ranking de Times</h2>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Time</th>
+                          <th>PG</th>
+                          <th>%</th>
+                          <th>J</th>
+                          <th>V</th>
+                          <th>E</th>
+                          <th>D</th>
+                          <th>GP</th>
+                          <th>GC</th>
+                          <th>SG</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let time of rankingTimes">
+                          <td>{{ time.posicao }}</td>
+                          <td>{{ time.time }}</td>
+                          <td>{{ time.pontos }}</td>
+                          <td>{{ time.percentual }}</td>
+                          <td>{{ time.jogos }}</td>
+                          <td>{{ time.vitorias }}</td>
+                          <td>{{ time.empates }}</td>
+                          <td>{{ time.derrotas }}</td>
+                          <td>{{ time.gp }}</td>
+                          <td>{{ time.gc }}</td>
+                          <td>{{ time.sg }}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <!-- Calendário -->
+          <div class="proximos-jogos">
+              <h2>Próximos Jogos</h2>
+              <div class="calendar">
+                  <div class="month">
+                      <span>Novembro 2024</span>
+                  </div>
+                  <div class="weekdays">
+                      <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sab</span>
+                  </div>
+                  <div class="days">
+                      <span>1</span><span>2</span><span class="game-day">3</span>
+                      <span>4</span><span>5</span><span class="game-day">6</span>
+                      <span>7</span><span>8</span><span>9</span>
+                      <span>10</span><span>11</span><span>12</span>
+                      <span>13</span><span>14</span><span>15</span>
+                      <span class="game-day">16</span><span>17</span><span>18</span>
+                      <span>19</span><span>20</span><span>21</span>
+                      <span>22</span><span>23</span><span>24</span>
+                      <span class="game-day">25</span><span>26</span><span>27</span>
+                      <span>28</span><span>29</span><span>30</span>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Ranking de Artilheiros -->
+          <div class="ranking-artilheiros">
+              <h2>Ranking de Artilheiros</h2>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Jogador</th>
+                          <th>Jogos</th>
+                          <th>Média</th>
+                          <th>Gols</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let jogador of rankingArtilheiros">
+                          <td>{{ jogador.posicao }}</td>
+                          <td>{{ jogador.jogador }}</td>
+                          <td>{{ jogador.jogos }}</td>
+                          <td>{{ jogador.media }}</td>
+                          <td>{{ jogador.gols }}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
