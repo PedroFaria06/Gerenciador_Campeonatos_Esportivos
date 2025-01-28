@@ -1,6 +1,6 @@
 package com.soccer.championship.domain.entity;
 
-import com.soccer.championship.domain.ChampionshipStatus;
+import com.soccer.championship.domain.enums.ChampionshipStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

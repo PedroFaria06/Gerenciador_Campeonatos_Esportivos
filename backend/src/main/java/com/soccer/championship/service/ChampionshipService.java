@@ -1,10 +1,10 @@
 package com.soccer.championship.service;
 
-import com.soccer.championship.domain.ChampionshipStatus;
 import com.soccer.championship.domain.dto.ChampionshipDTO;
 import com.soccer.championship.domain.dto.ChampionshipTeamDTO;
 import com.soccer.championship.domain.entity.Championship;
 import com.soccer.championship.domain.entity.Team;
+import com.soccer.championship.domain.enums.ChampionshipStatus;
 import com.soccer.championship.exception.BusinessException;
 import com.soccer.championship.exception.ResourceNotFoundException;
 import com.soccer.championship.mapper.ChampionshipMapper;
@@ -121,8 +121,7 @@ public class ChampionshipService {
     Championship championship = championshipRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado com ID: " + id));
 
-    if (championship.getStatus() != ChampionshipStatus.DRAFT &&
-      championship.getStatus() != ChampionshipStatus.CANCELLED) {
+    if (championship.getStatus() == ChampionshipStatus.IN_PROGRESS) {
       throw new BusinessException("Não é possível excluir um campeonato que já está em andamento ou finalizado");
     }
 

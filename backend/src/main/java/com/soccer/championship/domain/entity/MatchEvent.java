@@ -1,6 +1,7 @@
 package com.soccer.championship.domain.entity;
 
-import com.soccer.championship.domain.MatchEventType;
+
+import com.soccer.championship.domain.enums.MatchEventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

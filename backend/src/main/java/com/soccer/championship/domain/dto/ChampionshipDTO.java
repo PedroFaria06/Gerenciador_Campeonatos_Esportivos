@@ -1,6 +1,6 @@
 package com.soccer.championship.domain.dto;
 
-import com.soccer.championship.domain.ChampionshipStatus;
+import com.soccer.championship.domain.enums.ChampionshipStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

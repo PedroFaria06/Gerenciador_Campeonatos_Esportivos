@@ -2,8 +2,8 @@ package com.soccer.championship.service;
 
 import com.soccer.championship.domain.dto.TeamDTO;
 import com.soccer.championship.domain.entity.Team;
+import com.soccer.championship.exception.BusinessException;
 import com.soccer.championship.exception.ResourceNotFoundException;
-import com.soccer.championship.exception.UniqueConstraintViolationException;
 import com.soccer.championship.mapper.TeamMapper;
 import com.soccer.championship.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +29,25 @@ public class TeamService {
 
   @Transactional(readOnly = true)
   public TeamDTO findById(Long id) {
-    log.debug("Buscando time por ID: {}", id);
+    log.info("Buscando time por ID: {}", id);
 
-    return teamRepository.findTeamById(id);
+    try {
+      TeamDTO teamDTO = teamRepository.findTeamById(id);
+      if (teamDTO == null) {
+        throw new ResourceNotFoundException("Time não encontrado com ID: " + id);
+      }
+      return teamDTO;
+    } catch (Exception e) {
+      throw new ResourceNotFoundException("Erro ao buscar time com ID: " + id);
+    }
   }
 
   @Transactional
   public TeamDTO create(TeamDTO teamDTO) {
-    log.debug("Criando novo time: {}", teamDTO);
+    log.info("Criando novo time: {}", teamDTO);
 
     if (teamRepository.existsByNameIgnoreCase(teamDTO.name())) {
-      throw new UniqueConstraintViolationException("Já existe um time com o nome: " + teamDTO.name());
+      throw new BusinessException("Já existe um time com o nome: " + teamDTO.name());
     }
 
     Team team = TeamMapper.INSTANCE.toEntity(teamDTO);
@@ -57,7 +65,7 @@ public class TeamService {
 
     if (!team.getName().equalsIgnoreCase(teamDTO.name()) &&
       teamRepository.existsByNameIgnoreCase(teamDTO.name())) {
-      throw new UniqueConstraintViolationException("Já existe um time com o nome: " + teamDTO.name());
+      throw new BusinessException("Já existe um time com o nome: " + teamDTO.name());
     }
 
     TeamMapper.INSTANCE.updateEntity(teamDTO, team);
