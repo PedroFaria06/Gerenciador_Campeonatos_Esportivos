@@ -8,6 +8,7 @@ import { JogosComponent } from './jogos/jogos.component';
 import { SumulaComponent } from './sumula/sumula.component';
 import { RelatorioComponent } from './relatorio/relatorio.component';
 import { ClassificacaoComponent } from './classificacao/classificacao.component';
+import { TeamsAndAthletesComponent } from './teams-and-athletes/teams-and-athletes.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
