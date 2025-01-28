@@ -1,61 +1,52 @@
+/* Remove a barra superior */
+.header {
+  display: none !important;
+}
+
 .container {
   display: block;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #1F82BF;
-}
-
-.menu-logo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.menu-btn {
-  width: 22%;
-  margin-right: 2em;
-  margin-left: 2em;
-}
-
-.logo {
-  background-color: white;
-  padding: 4px 56px 4px 56px;
-  border-radius: 8px;
-}
-
-.profile {
-  width: 5rem;
-  height: 5rem;
-  padding: 1em;
 }
 
 .aside-content {
   display: flex;
 }
 
+/* Sidebar azul fixa */
 .sidebar {
-  width: 24%;
-  height: 100vh;
-  background-color: white;
-
+  width: 250px;
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  height: 100%;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
 }
 
-.menu {
+.sidebar .menu {
   list-style-type: none;
   padding: 0;
 }
 
-li {
+.sidebar .menu li {
   font-size: 1.2rem;
   padding: 0.6em;
 }
 
-.active {
-  background-color: rgb(31, 130, 191, 0.5);
+.sidebar .menu li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.sidebar .menu li a:hover,
+.sidebar .menu li a.active {
+  background-color: #0056b3;
+  font-weight: bold;
 }
 
 .content {
@@ -63,6 +54,7 @@ li {
   flex-direction: column;
   width: 100%;
   padding: 1em;
+  margin-left: 250px;
 }
 
 .register-btn {
@@ -70,7 +62,7 @@ li {
   color: white;
   align-self: center;
   font-weight: 600;
-  padding: 0.8em 1.6em 0.8em 1.6em;
+  padding: 0.8em 1.6em;
   border-radius: 24px;
   font-size: 1.2rem;
   border: none;
@@ -98,7 +90,7 @@ li {
 .shield {
   width: 3%;
   height: 3vh;
-  background-color: rgb(31, 130, 191, 0.5);
+  background-color: rgba(31, 130, 191, 0.5);
   border-radius: 8px;
   margin-right: 1rem;
 }
@@ -126,7 +118,7 @@ li {
   background-color: white;
   border-radius: 8px;
   border-color: #1F82BF;
-  padding: 0.4rem 1.2rem 0.4rem 1.2rem;
+  padding: 0.4rem 1.2rem;
   font-size: 1rem;
   cursor: pointer;
 }
@@ -138,7 +130,6 @@ li {
   box-shadow: 0px 10px 10px 0px #00000040;
   border-radius: 8px;
   padding: 0.5rem;
-
 }
 
 .options-menu button {
@@ -163,7 +154,6 @@ li {
 .options-menu.visible {
   display: block;
 }
-
 
 .expandable {
   display: flex;
@@ -231,7 +221,6 @@ tbody {
   margin-bottom: 1rem;
   padding-right: 1rem;
   box-shadow: 0.5px 0.5px 10px 3px #00000040;
-
 }
 
 .btnClose-label {

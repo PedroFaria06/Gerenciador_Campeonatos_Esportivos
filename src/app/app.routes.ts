@@ -1,24 +1,28 @@
-import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { CadastroComponent } from './cadastro/cadastro.component';
+import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+
+// Importação dos componentes
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { TimesComponent } from './times/times.component';
 import { CampeonatoComponent } from './campeonato/campeonato.component';
 import { JogosComponent } from './jogos/jogos.component';
 import { SumulaComponent } from './sumula/sumula.component';
 import { RelatorioComponent } from './relatorio/relatorio.component';
 import { ClassificacaoComponent } from './classificacao/classificacao.component';
+import { TeamsAndAthletesComponent } from './teams-and-athletes/teams-and-athletes.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'cadastro', component: CadastroComponent },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'times', component: TimesComponent },
+  { path: 'teams-and-athletes', component: TeamsAndAthletesComponent },
   { path: 'campeonatos', component: CampeonatoComponent },
   { path: 'jogos', component: JogosComponent },
   { path: 'sumula', component: SumulaComponent },
   { path: 'relatorio', component: RelatorioComponent },
   { path: 'classificacao', component: ClassificacaoComponent },
-  { path: 'teams-and-athletes', component: TeamsAndAthletesComponent },
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

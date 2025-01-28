@@ -1,30 +1,11 @@
 <div class="container">
-    <header class="header">
-        <div class="menu-logo">
-            <img src="assets/images/menu_btn.png" alt="menu" class="menu-btn">
-            <div class="logo">
-                <h1>LOGO</h1>
-            </div>
-        </div>
-        <img src="assets/images/profile_icon.png" alt="profile" class="profile">
-    </header>
-
     <div class="aside-content">
-        <aside class="sidebar">
-            <ul class="menu">
-                <li>Dashboard</li>
-                <li class="active">Times e Atletas</li>
-                <li>Campeonatos</li>
-                <li>Jogos</li>
-                <li>Súmula</li>
-                <li>Classificação</li>
-                <li>Relatórios</li>
-            </ul>
-        </aside>
-
+        <!-- Conteúdo Principal -->
         <main class="content">
+            <!-- Botão de Cadastrar -->
             <button class="register-btn" (click)="openModal('Cadastrar Time')">CADASTRAR</button>
 
+            <!-- Cards de Times -->
             <div class="card" *ngFor="let team of teamsWithAthletes">
                 <div class="shield-team">
                     <div class="shield"></div>
@@ -32,8 +13,9 @@
                 </div>
                 <div class="divider"></div>
                 <div class="arrow-options">
+                    <!-- Botão de Opções -->
                     <button class="option-btn" (click)="toggleOptionsMenu($event)">Opções</button>
-                    <div class="options-menu">
+                    <div class="options-menu hidden">
                         <button (click)="openModal('Editar Time')">Editar</button>
                         <button (click)="openRemoveModal(team)">Remover</button>
                     </div>
@@ -65,6 +47,7 @@
         </main>
     </div>
 
+    <!-- Modal de Cadastro -->
     <div class="modal" *ngIf="isModalOpen">
         <div class="modal-content">
             <div class="modal-header">
@@ -78,10 +61,8 @@
             <form class="modal-body">
                 <input id="team-name" type="text" [(ngModel)]="newTeam.name" name="teamName" maxlength="20"
                     placeholder="Nome do Time" />
-
                 <input id="coach-name" type="text" [(ngModel)]="newTeam.coachName" name="coachName" maxlength="20"
                     placeholder="Nome do Técnico" />
-
                 <input id="player-count" type="number" [(ngModel)]="newTeam.playerCount" name="playerCount" max="20"
                     maxlength="2" placeholder="Quantidade de Jogadores" (change)="generatePlayerFields()" />
             </form>
@@ -121,17 +102,15 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmação -->
     <div class="confirmation-modal" *ngIf="isRemoveModalOpen">
         <div class="modal-remove-content">
             <h2>Remover time</h2>
-            <p>
-                Não será mais possível recuperar o que for removido. Você tem certeza que deseja remover este time?
-            </p>
+            <p>Não será mais possível recuperar o que for removido. Você tem certeza que deseja remover este time?</p>
             <div class="modal-actions">
                 <button class="cancel-btn" (click)="closeRemoveModal()">Cancelar</button>
                 <button class="remove-btn" (click)="confirmRemove()">Remover</button>
             </div>
         </div>
     </div>
-
 </div>

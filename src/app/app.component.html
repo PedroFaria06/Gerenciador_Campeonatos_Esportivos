@@ -1,3 +1,20 @@
-<div class="app-container">
-  <router-outlet></router-outlet>
+<div class="dashboard-container">
+  <!-- Sidebar azul -->
+  <div class="sidebar azul">
+    <div class="logo">LOGO</div>
+    <ul class="menu">
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/teams-and-athletes" routerLinkActive="active">Times e Atletas</a></li>
+      <li><a routerLink="/campeonatos" routerLinkActive="active">Campeonatos</a></li>
+      <li><a routerLink="/jogos" routerLinkActive="active">Jogos</a></li>
+      <li><a routerLink="/sumula" routerLinkActive="active">Súmula</a></li>
+      <li><a routerLink="/classificacao" routerLinkActive="active">Classificação</a></li>
+      <li><a routerLink="/relatorio" routerLinkActive="active">Relatórios</a></li>
+    </ul>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </div>
