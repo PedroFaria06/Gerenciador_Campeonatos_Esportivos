@@ -131,7 +131,7 @@ public class MatchService {
     Championship championship = championshipRepository.findById(championshipId)
       .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado com ID: " + championshipId));
 
-    if (championship.getStatus() != ChampionshipStatus.STARTED) {
+    if (championship.getStatus() != ChampionshipStatus.IN_PROGRESS) {
       throw new BusinessException("Só é possível criar/atualizar partidas em campeonatos em andamento");
     }
   }

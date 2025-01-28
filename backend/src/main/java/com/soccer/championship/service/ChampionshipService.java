@@ -121,7 +121,7 @@ public class ChampionshipService {
     Championship championship = championshipRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado com ID: " + id));
 
-    if (championship.getStatus() == ChampionshipStatus.STARTED) {
+    if (championship.getStatus() == ChampionshipStatus.IN_PROGRESS) {
       throw new BusinessException("Não é possível excluir um campeonato que já está em andamento ou finalizado");
     }
 

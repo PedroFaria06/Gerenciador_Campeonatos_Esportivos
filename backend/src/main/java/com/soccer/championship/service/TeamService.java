@@ -32,15 +32,14 @@ public class TeamService {
     log.info("Buscando time por ID: {}", id);
 
     try {
-      if (!teamRepository.existsById(id)) {
-        throw new BusinessException("Time não encontrado com ID: " + id);
+      TeamDTO teamDTO = teamRepository.findTeamById(id);
+      if (teamDTO == null) {
+        throw new ResourceNotFoundException("Time não encontrado com ID: " + id);
       }
-    } catch (BusinessException e) {
-      log.error("Erro ao buscar time por ID: {}", id, e);
-      throw e;
+      return teamDTO;
+    } catch (Exception e) {
+      throw new ResourceNotFoundException("Erro ao buscar time com ID: " + id);
     }
-
-    return teamRepository.findTeamById(id);
   }
 
   @Transactional

@@ -2,6 +2,7 @@ package com.soccer.championship.service;
 
 import com.soccer.championship.domain.dto.PlayerDTO;
 import com.soccer.championship.domain.entity.Player;
+import com.soccer.championship.exception.BusinessException;
 import com.soccer.championship.exception.ResourceNotFoundException;
 import com.soccer.championship.exception.UniqueConstraintViolationException;
 import com.soccer.championship.mapper.PlayerMapper;
@@ -92,7 +93,7 @@ public class PlayerService {
     private void validateShirtNumber(PlayerDTO playerDTO) {
         if (playerDTO.teamId() != null && playerDTO.shirtNumber() != null &&
             playerRepository.existsByTeamIdAndShirtNumber(playerDTO.teamId(), playerDTO.shirtNumber())) {
-            throw new UniqueConstraintViolationException(
+            throw new BusinessException(
                 String.format("Já existe um jogador com o número %d no time com ID %d",
                     playerDTO.shirtNumber(), playerDTO.teamId()));
         }
@@ -102,7 +103,7 @@ public class PlayerService {
         if (playerDTO.teamId() != null && playerDTO.shirtNumber() != null &&
             !playerDTO.shirtNumber().equals(existingPlayer.getShirtNumber()) &&
             playerRepository.existsByTeamIdAndShirtNumber(playerDTO.teamId(), playerDTO.shirtNumber())) {
-            throw new UniqueConstraintViolationException(
+            throw new BusinessException(
                 String.format("Já existe um jogador com o número %d no time com ID %d",
                     playerDTO.shirtNumber(), playerDTO.teamId()));
         }
