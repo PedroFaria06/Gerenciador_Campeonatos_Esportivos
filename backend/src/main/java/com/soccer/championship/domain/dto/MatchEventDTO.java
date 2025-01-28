@@ -1,6 +1,7 @@
 package com.soccer.championship.domain.dto;
 
-import com.soccer.championship.domain.MatchEventType;
+
+import com.soccer.championship.domain.enums.MatchEventType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;

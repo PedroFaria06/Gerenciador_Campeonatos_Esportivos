@@ -1,7 +1,8 @@
 package com.soccer.championship.repository;
 
-import com.soccer.championship.domain.MatchStatus;
+
 import com.soccer.championship.domain.entity.Match;
+import com.soccer.championship.domain.enums.MatchStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

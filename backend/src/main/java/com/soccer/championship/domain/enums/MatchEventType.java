@@ -1,4 +1,4 @@
-package com.soccer.championship.domain;
+package com.soccer.championship.domain.enums;
 
 public enum MatchEventType {
     GOAL,

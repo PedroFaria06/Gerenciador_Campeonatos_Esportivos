@@ -1,9 +1,10 @@
 package com.soccer.championship.controller;
 
-import com.soccer.championship.domain.ChampionshipStatus;
+
 import com.soccer.championship.domain.dto.ChampionshipDTO;
 import com.soccer.championship.domain.dto.ChampionshipTeamDTO;
 import com.soccer.championship.domain.dto.ChampionshipTeamsDTO;
+import com.soccer.championship.domain.enums.ChampionshipStatus;
 import com.soccer.championship.service.ChampionshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

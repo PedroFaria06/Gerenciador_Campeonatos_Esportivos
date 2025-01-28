@@ -1,11 +1,11 @@
 package com.soccer.championship.service;
 
-import com.soccer.championship.domain.MatchEventType;
-import com.soccer.championship.domain.MatchStatus;
 import com.soccer.championship.domain.dto.MatchEventDTO;
 import com.soccer.championship.domain.entity.Match;
 import com.soccer.championship.domain.entity.MatchEvent;
 import com.soccer.championship.domain.entity.Player;
+import com.soccer.championship.domain.enums.MatchEventType;
+import com.soccer.championship.domain.enums.MatchStatus;
 import com.soccer.championship.exception.BusinessException;
 import com.soccer.championship.exception.ResourceNotFoundException;
 import com.soccer.championship.mapper.MatchEventMapper;
