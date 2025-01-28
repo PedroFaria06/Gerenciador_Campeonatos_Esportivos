@@ -20,4 +20,5 @@ export const routes: Routes = [
   { path: 'sumula', component: SumulaComponent },
   { path: 'relatorio', component: RelatorioComponent },
   { path: 'classificacao', component: ClassificacaoComponent },
+  { path: 'teams-and-athletes', component: TeamsAndAthletesComponent },
 ];
