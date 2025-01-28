@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">LOGO</div>
+      <ul class="menu">
+        <li>Dashboard</li>
+        <li>Times e Atletas</li>
+        <li>Campeonatos</li>
+        <li>Jogos</li>
+        <li class="active">Súmula</li>
+        <li>Classificação</li>
+        <li>Relatórios</li>
+      </ul>
+    </div>
+  
+    <!-- Conteúdo Principal -->
+    <div class="content">
+      <h1>Súmula</h1>
+  
+      <!-- Dropdowns -->
+      <div class="dropdown-container">
+        <label for="select-campeonato">Selecione um Campeonato:</label>
+        <select id="select-campeonato" [(ngModel)]="selectedCampeonato">
+          <option value="" disabled selected>Selecione um Campeonato</option>
+          <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">
+            {{ campeonato.nome }}
+          </option>
+        </select>
+  
+        <label for="select-etapa">Selecione uma Etapa:</label>
+        <select id="select-etapa" [(ngModel)]="selectedEtapa" [disabled]="!selectedCampeonato">
+          <option value="" disabled selected>Selecione uma Etapa</option>
+          <option *ngFor="let etapa of etapas" [value]="etapa.id">
+            {{ etapa.nome }}
+          </option>
+        </select>
+  
+        <label for="select-jogo">Selecione um Jogo:</label>
+        <select id="select-jogo" [(ngModel)]="selectedJogo" [disabled]="!selectedEtapa">
+          <option value="" disabled selected>Selecione um Jogo</option>
+          <option *ngFor="let jogo of jogos" [value]="jogo.id">
+            {{ jogo.nome }}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Mensagem de Seleção -->
+      <div *ngIf="!selectedJogo" class="mensagem-selecao">
+        <div class="icone">
+          <span>?</span>
+        </div>
+        <p>Selecione um campeonato, uma etapa e um jogo para visualizar a súmula!</p>
+      </div>
+    </div>
+  </div>
+  
