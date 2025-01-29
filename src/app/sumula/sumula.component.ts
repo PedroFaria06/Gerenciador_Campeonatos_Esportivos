@@ -5,27 +5,28 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-sumula',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Importar FormsModule para [(ngModel)]
+  imports: [CommonModule, FormsModule],
   templateUrl: './sumula.component.html',
   styleUrls: ['./sumula.component.css'],
 })
 export class SumulaComponent implements OnInit {
-  campeonatos = [
-    { id: 1, nome: 'Campeonato 1' },
-    { id: 2, nome: 'Campeonato 2' },
-    { id: 3, nome: 'Campeonato 3' },
+  campeonatos = [{ id: 1, nome: 'Copa ABC' }];
+  etapas = [{ id: 1, nome: 'Quartas de final' }];
+  jogos = [{ id: 1, nome: 'Time 1 x Time 2' }];
+
+  eventos = [
+    { tipo: 'Cartão Amarelo', jogador: 'Pedro', numero: 10, tempo: 17, observacao: 'Primeiro cartão do jogo.' },
+    { tipo: 'Gol', jogador: 'João', numero: 11, tempo: 23, observacao: 'Primeiro gol do jogo.' },
   ];
 
-  etapas = [
-    { id: 1, nome: 'Etapa 1' },
-    { id: 2, nome: 'Etapa 2' },
-    { id: 3, nome: 'Etapa 3' },
+  time1 = [
+    { numero: 1, nome: 'João Pedro', posicao: 'Goleiro' },
+    { numero: 2, nome: 'Carlos', posicao: 'Defensor' },
   ];
 
-  jogos = [
-    { id: 1, nome: 'Jogo 1' },
-    { id: 2, nome: 'Jogo 2' },
-    { id: 3, nome: 'Jogo 3' },
+  time2 = [
+    { numero: 1, nome: 'João Pedro', posicao: 'Goleiro' },
+    { numero: 2, nome: 'Lucas', posicao: 'Defensor' },
   ];
 
   selectedCampeonato: number | null = null;

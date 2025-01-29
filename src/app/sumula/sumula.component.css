@@ -1,77 +1,110 @@
 .dashboard-container {
-    display: flex;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #007bff;
-    color: white;
-    height: 100vh;
-    padding: 20px;
-  }
-  
-  .sidebar .logo {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 30px;
-  }
-  
-  .sidebar .menu li {
-    margin-bottom: 20px;
-    list-style: none;
-    cursor: pointer;
-  }
-  
-  .sidebar .menu li.active {
-    background-color: #68a4ff;
-    font-weight: bold;
-  }
-  
-  .content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-  }
-  
-  .dropdown-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
-  }
-  
-  .dropdown-container label {
-    font-size: 16px;
-    margin-right: 10px;
-  }
-  
-  .dropdown-container select {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-  }
-  
-  .mensagem-selecao {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 50px;
-    text-align: center;
-    color: #999;
-  }
-  
-  .mensagem-selecao .icone {
-    font-size: 50px;
-    color: #007bff;
-    margin-bottom: 10px;
-  }
-  
-  .mensagem-selecao p {
-    font-size: 16px;
-  }
-  
+  display: flex;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #007bff;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.sidebar .menu li {
+  margin-bottom: 20px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.sidebar .menu li.active {
+  background-color: #68a4ff;
+  font-weight: bold;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.dropdown-container {
+  display: flex;
+  justify-content: space-between;
+  background: #e3e3e3;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+select {
+  padding: 10px;
+  width: 32%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.sumula-container {
+  margin-top: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dados-partida,
+.eventos-partida,
+.lista-jogadores {
+  margin-bottom: 20px;
+}
+
+.dados-partida p {
+  margin: 5px 0;
+}
+
+.eventos-partida table,
+.lista-jogadores table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.eventos-partida th,
+.eventos-partida td,
+.lista-jogadores th,
+.lista-jogadores td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.eventos-partida th {
+  background-color: #007bff;
+  color: white;
+}
+
+.time {
+  margin-top: 10px;
+}
+
+.time h4 {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}

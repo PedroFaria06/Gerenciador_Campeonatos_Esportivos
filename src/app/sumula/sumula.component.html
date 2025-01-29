@@ -1,44 +1,98 @@
 <div class="dashboard-container">
+  <div class="content">
+    <h1>Súmula</h1>
 
-  
-    <!-- Conteúdo Principal -->
-    <div class="content">
-      <h1>Súmula</h1>
-  
-      <!-- Dropdowns -->
-      <div class="dropdown-container">
-        <label for="select-campeonato">Selecione um Campeonato:</label>
-        <select id="select-campeonato" [(ngModel)]="selectedCampeonato">
-          <option value="" disabled selected>Selecione um Campeonato</option>
-          <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">
-            {{ campeonato.nome }}
-          </option>
-        </select>
-  
-        <label for="select-etapa">Selecione uma Etapa:</label>
-        <select id="select-etapa" [(ngModel)]="selectedEtapa" [disabled]="!selectedCampeonato">
-          <option value="" disabled selected>Selecione uma Etapa</option>
-          <option *ngFor="let etapa of etapas" [value]="etapa.id">
-            {{ etapa.nome }}
-          </option>
-        </select>
-  
-        <label for="select-jogo">Selecione um Jogo:</label>
-        <select id="select-jogo" [(ngModel)]="selectedJogo" [disabled]="!selectedEtapa">
-          <option value="" disabled selected>Selecione um Jogo</option>
-          <option *ngFor="let jogo of jogos" [value]="jogo.id">
-            {{ jogo.nome }}
-          </option>
-        </select>
+    <div class="dropdown-container">
+      <select id="select-campeonato" [(ngModel)]="selectedCampeonato">
+        <option value="" disabled selected>Selecione um Campeonato</option>
+        <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">
+          {{ campeonato.nome }}
+        </option>
+      </select>
+
+      <select id="select-etapa" [(ngModel)]="selectedEtapa" [disabled]="!selectedCampeonato">
+        <option value="" disabled selected>Selecione uma Etapa</option>
+        <option *ngFor="let etapa of etapas" [value]="etapa.id">
+          {{ etapa.nome }}
+        </option>
+      </select>
+
+      <select id="select-jogo" [(ngModel)]="selectedJogo" [disabled]="!selectedEtapa">
+        <option value="" disabled selected>Selecione um Jogo</option>
+        <option *ngFor="let jogo of jogos" [value]="jogo.id">
+          {{ jogo.nome }}
+        </option>
+      </select>
+    </div>
+
+    <div *ngIf="!selectedJogo" class="mensagem-selecao">
+      <p>Selecione um campeonato, uma etapa e um jogo para visualizar a súmula!</p>
+    </div>
+
+    <div *ngIf="selectedJogo" class="sumula-container">
+      <div class="dados-partida">
+        <h3>Dados da Partida</h3>
+        <p><strong>📅 Data:</strong> 10/11/2024</p>
+        <p><strong>📍 Local:</strong> Arena ABC</p>
+        <p><strong>⏰ Horário:</strong> 17:00</p>
+        <p><strong>🆚 Times:</strong> Time 1 x Time 2</p>
+        <p><strong>⚖️ Árbitro:</strong> João</p>
       </div>
-  
-      <!-- Mensagem de Seleção -->
-      <div *ngIf="!selectedJogo" class="mensagem-selecao">
-        <div class="icone">
-          <span>?</span>
+
+      <div class="eventos-partida">
+        <h3>Eventos da Partida</h3>
+        <table>
+          <tr>
+            <th>Evento</th>
+            <th>Jogador</th>
+            <th>Nº</th>
+            <th>Tempo</th>
+            <th>Observações</th>
+          </tr>
+          <tr *ngFor="let evento of eventos">
+            <td>{{ evento.tipo }}</td>
+            <td>{{ evento.jogador }}</td>
+            <td>{{ evento.numero }}</td>
+            <td>{{ evento.tempo }}'</td>
+            <td>{{ evento.observacao }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="lista-jogadores">
+        <h3>Lista de Jogadores que iniciaram a partida</h3>
+        <div class="time">
+          <h4>Time 1 - Técnico: Pedro</h4>
+          <table>
+            <tr>
+              <th>Nº</th>
+              <th>Nome</th>
+              <th>Posição</th>
+            </tr>
+            <tr *ngFor="let jogador of time1">
+              <td>{{ jogador.numero }}</td>
+              <td>{{ jogador.nome }}</td>
+              <td>{{ jogador.posicao }}</td>
+            </tr>
+          </table>
         </div>
-        <p>Selecione um campeonato, uma etapa e um jogo para visualizar a súmula!</p>
+
+        <div class="time">
+          <h4>Time 2 - Técnico: João</h4>
+          <table>
+            <tr>
+              <th>Nº</th>
+              <th>Nome</th>
+              <th>Posição</th>
+            </tr>
+            <tr *ngFor="let jogador of time2">
+              <td>{{ jogador.numero }}</td>
+              <td>{{ jogador.nome }}</td>
+              <td>{{ jogador.posicao }}</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-  
+</div>
