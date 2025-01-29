@@ -19,9 +19,6 @@
                         <button (click)="openModal('Editar Time')">Editar</button>
                         <button (click)="openRemoveModal(team)">Remover</button>
                     </div>
-                    <span class="material-symbols-outlined arrow-icon" (click)="toggleExpand(team)">
-                        arrow_back_ios
-                    </span>
                 </div>
                 <div class="expandable" [class.expanded]="team.isExpanded">
                     <table class="data-table">
