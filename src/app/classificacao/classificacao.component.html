@@ -1,0 +1,122 @@
+<div class="relatorio-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+      <div class="logo">LOGO</div>
+      <ul class="menu">
+        <li>Dashboard</li>
+        <li>Times e Atletas</li>
+        <li>Campeonatos</li>
+        <li>Jogos</li>
+        <li>Súmula</li>
+        <li>Classificação</li>
+        <li>Relatórios</li>
+      </ul>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <div class="header">
+      <button class="menu-button" (click)="toggleForm()">☰</button>
+      <div class="profile-icon">👤</div>
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="campeonato-grid">
+      <!-- Seletor campeonato -->
+      <select id="campeonato" (change)="onCampeonatoChange($event)">
+            <option value="" disabled selected>Selecione um campeonato</option> 
+            <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">{{ campeonato.nome }}</option>
+          </select>
+    </div>
+
+    <section *ngIf="selectedCampeonato" id="grid-dados">
+        <!-- Ranking de Times -->
+        <div class="ranking-times">
+            <h2>Ranking de Times</h2>
+            <table id="tabela-times">
+            <thead>
+                <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>Pontos</th>
+                <th>%</th>
+                <th>Jogos</th>
+                <th>Vitórias</th>
+                <th>Empates</th>
+                <th>Derrotas</th>
+                <th>GP</th>
+                <th>GC</th>
+                <th>SG</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let time of rankingTimes">
+                <td>{{ time.posicao }}</td>
+                <td>{{ time.time }}</td>
+                <td>{{ time.pontos }}</td>
+                <td>{{ time.percentual }}</td>
+                <td>{{ time.jogos }}</td>
+                <td>{{ time.vitorias }}</td>
+                <td>{{ time.empates }}</td>
+                <td>{{ time.derrotas }}</td>
+                <td>{{ time.gp }}</td>
+                <td>{{ time.gc }}</td>
+                <td>{{ time.sg }}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+
+        <div id="container-dados-jogadores">
+            <!-- Ranking de Artilheiros -->
+            <div class="ranking-artilheiros">
+                <h2>Ranking de Artilheiros</h2>
+                <table>
+                <thead>
+                    <tr>
+                    <th>#</th>
+                    <th>Jogador</th>
+                    <th>Jogos</th>
+                    <th>Média</th>
+                    <th>Gols</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let jogador of rankingArtilheiros">
+                    <td>{{ jogador.posicao }}</td>
+                    <td>{{ jogador.jogador }}</td>
+                    <td>{{ jogador.jogos }}</td>
+                    <td>{{ jogador.media }}</td>
+                    <td>{{ jogador.gols }}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            <!-- Ranking de Goleiros -->
+            <div class="ranking-goleiros">
+                <h2>Ranking de Goleiros</h2>
+                <table>
+                <thead>
+                    <tr>
+                    <th>#</th>
+                    <th>Jogador</th>
+                    <th>Jogos</th>
+                    <th>Gols sofridos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let jogador of rankingGoleiros">
+                    <td>{{ jogador.posicao }}</td>
+                    <td>{{ jogador.jogador }}</td>
+                    <td>{{ jogador.jogos }}</td>
+                    <td>{{ jogador.gols_sofridos }}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+  </div>
+</div>

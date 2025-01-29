@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+.relatorio-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #007bff;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+  
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+  
+.sidebar .menu li {
+    margin-bottom: 20px;
+    list-style: none;
+    cursor: pointer;
+}
+  
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+  
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.campeonato-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+}
+
+#campeonato {
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 50%;
+    padding: 5px;
+}
+
+.ranking-times,
+.ranking-artilheiros,
+.ranking-goleiros {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  } 
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table th,
+  table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+#grid-dados {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#container-dados-jogadores {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
