@@ -1,5 +1,6 @@
 package com.soccer.championship.domain.entity;
 
+import com.soccer.championship.domain.enums.PlayerPosition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,8 @@ public class Player {
   private LocalDate birthDate;
 
   @Column(nullable = false)
-  private String position;
+  @Enumerated(EnumType.STRING)
+  private PlayerPosition position;
 
   @Column(name = "shirt_number")
   private Integer shirtNumber;

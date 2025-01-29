@@ -46,9 +46,8 @@ public class PlayerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Jogador não encontrado com ID: " + id));
     }
 
-    @Transactional
     public PlayerDTO create(PlayerDTO playerDTO) {
-        log.debug("Criando novo jogador: {}", playerDTO);
+        log.info("Criando novo jogador: {}", playerDTO);
 
         validateTeam(playerDTO.teamId());
         validateShirtNumber(playerDTO);
@@ -108,4 +107,5 @@ public class PlayerService {
                     playerDTO.shirtNumber(), playerDTO.teamId()));
         }
     }
+
 }

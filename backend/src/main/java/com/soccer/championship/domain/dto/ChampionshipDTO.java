@@ -9,23 +9,23 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public record ChampionshipDTO(
-    Long id,
+  Long id,
 
-    @NotBlank(message = "O nome do campeonato é obrigatório")
-    @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
-    String name,
+  @NotBlank(message = "O nome do campeonato é obrigatório")
+  @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
+  String name,
 
-    @NotNull(message = "A data de início é obrigatória")
-    LocalDate startDate,
+  @NotNull(message = "A data de início é obrigatória")
+  LocalDate startDate,
 
-    LocalDate endDate,
+  LocalDate endDate,
 
-    @NotBlank(message = "A temporada é obrigatória")
-    @Size(max = 10, message = "A temporada deve ter no máximo 10 caracteres")
-    String season,
+  @NotBlank(message = "A temporada é obrigatória")
+  @Size(max = 10, message = "A temporada deve ter no máximo 10 caracteres")
+  String season,
 
-    @NotNull(message = "O status é obrigatório")
-    ChampionshipStatus status,
+  @NotNull(message = "O status é obrigatório")
+  ChampionshipStatus status,
 
-    Set<Long> teamIds
+  Set<Long> teamIds
 ) {}
