@@ -1,30 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importando CommonModule para usar *ngFor
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CampeonatoComponent } from './campeonato.component';
+import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: 'app-campeonato',
-  standalone: true, // Declarando o componente como standalone
-  imports: [CommonModule], // Incluindo CommonModule para suportar *ngFor
-  templateUrl: './campeonato.component.html',
-  styleUrls: ['./campeonato.component.css'],
-})
-export class CampeonatoComponent implements OnInit {
-  emAndamento = [
-    { nome: 'Campeonato A' },
-    { nome: 'Campeonato B' },
-  ];
+describe('CampeonatoComponent', () => {
+  let component: CampeonatoComponent;
+  let fixture: ComponentFixture<CampeonatoComponent>;
 
-  proximosTorneios = [
-    { nome: 'Campeonato C' },
-    { nome: 'Campeonato D' },
-  ];
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [CommonModule], 
+      declarations: [CampeonatoComponent],
+    });
+    fixture = TestBed.createComponent(CampeonatoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-  encerrados = [
-    { nome: 'Campeonato E' },
-    { nome: 'Campeonato F' },
-  ];
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-  constructor() {}
-
-  ngOnInit(): void {}
-}
+  it('should toggle times visibility', () => {
+    const initialVisibility = component.campeonatos[0].timesVisiveis;
+    component.toggleTimes(0);
+    expect(component.campeonatos[0].timesVisiveis).toBe(!initialVisibility);
+  });
+});

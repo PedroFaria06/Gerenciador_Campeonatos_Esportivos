@@ -46,7 +46,15 @@ export class CampeonatoComponent {
     }
   ];
 
-  toggleTimes(index: number) {
+  public toggleTimes(index: number) {
     this.campeonatos[index].timesVisiveis = !this.campeonatos[index].timesVisiveis;
   }
+
+  public excluirTime(campeonato: any, time: any) {
+    const index = campeonato.times.indexOf(time);
+    if (index !== -1) {
+      campeonato.times.splice(index, 1);
+    }
+  }
 }
+
