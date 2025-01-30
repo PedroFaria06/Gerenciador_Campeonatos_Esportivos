@@ -45,16 +45,19 @@ export class CampeonatoComponent {
       ]
     }
   ];
-
   public toggleTimes(index: number) {
     this.campeonatos[index].timesVisiveis = !this.campeonatos[index].timesVisiveis;
   }
-
   public excluirTime(campeonato: any, time: any) {
     const index = campeonato.times.indexOf(time);
     if (index !== -1) {
       campeonato.times.splice(index, 1);
     }
   }
+  public confirmarExclusao(campeonato: any, time: any) {
+    const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${time.nome}?`);
+    if (confirmacao) {
+      this.excluirTime(campeonato, time);
+    }
+  }
 }
-
