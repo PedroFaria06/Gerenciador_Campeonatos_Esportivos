@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-campeonato',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule], 
   templateUrl: './campeonato.component.html',
   styleUrls: ['./campeonato.component.css']
 })
@@ -45,16 +46,47 @@ export class CampeonatoComponent {
       ]
     }
   ];
-  public toggleTimes(index: number) {
+  novoCampeonato = {
+    nome: '',
+    dataInicio: '',
+    dataTermino: '',
+    local: ''
+  };
+  mostrarFormularioCadastro = false;
+  exibirFormularioCadastro() {
+    this.mostrarFormularioCadastro = !this.mostrarFormularioCadastro;
+  }
+  fecharFormularioCadastro() {
+    this.mostrarFormularioCadastro = false;
+  }
+  cadastrarCampeonato() {
+    if (this.novoCampeonato.nome && this.novoCampeonato.dataInicio && this.novoCampeonato.dataTermino && this.novoCampeonato.local) {
+      const data = `${this.novoCampeonato.dataInicio} - ${this.novoCampeonato.dataTermino}`;
+      this.campeonatos.push({
+        nome: this.novoCampeonato.nome,
+        status: 'Não Iniciado',
+        local: this.novoCampeonato.local,
+        data: data, 
+        timesVisiveis: false,
+        times: []
+      });
+
+      this.novoCampeonato = { nome: '', dataInicio: '', dataTermino: '', local: '' };
+      this.mostrarFormularioCadastro = false; 
+    } else {
+      alert('Por favor, preencha todos os campos.');
+    }
+  }
+  toggleTimes(index: number) {
     this.campeonatos[index].timesVisiveis = !this.campeonatos[index].timesVisiveis;
   }
-  public excluirTime(campeonato: any, time: any) {
+  excluirTime(campeonato: any, time: any) {
     const index = campeonato.times.indexOf(time);
     if (index !== -1) {
       campeonato.times.splice(index, 1);
     }
   }
-  public confirmarExclusao(campeonato: any, time: any) {
+  confirmarExclusao(campeonato: any, time: any) {
     const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${time.nome}?`);
     if (confirmacao) {
       this.excluirTime(campeonato, time);
