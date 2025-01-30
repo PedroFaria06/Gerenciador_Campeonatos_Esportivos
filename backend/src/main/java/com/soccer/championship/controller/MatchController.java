@@ -1,7 +1,10 @@
 package com.soccer.championship.controller;
 
+import com.soccer.championship.domain.dto.EnumDto;
 import com.soccer.championship.domain.dto.MatchDTO;
 import com.soccer.championship.domain.dto.UpdateMatchDTO;
+import com.soccer.championship.domain.enums.MatchStatus;
+import com.soccer.championship.domain.enums.PlayerPosition;
 import com.soccer.championship.service.MatchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/matches")
@@ -61,5 +66,10 @@ public class MatchController {
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     matchService.delete(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/status")
+  public ResponseEntity<List<EnumDto>> obterTodos() {
+    return ResponseEntity.ok(MatchStatus.obterTodos());
   }
 }

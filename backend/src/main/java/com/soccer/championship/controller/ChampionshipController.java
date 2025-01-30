@@ -4,7 +4,9 @@ package com.soccer.championship.controller;
 import com.soccer.championship.domain.dto.ChampionshipDTO;
 import com.soccer.championship.domain.dto.ChampionshipTeamDTO;
 import com.soccer.championship.domain.dto.ChampionshipTeamsDTO;
+import com.soccer.championship.domain.dto.EnumDto;
 import com.soccer.championship.domain.enums.ChampionshipStatus;
+import com.soccer.championship.domain.enums.MatchStatus;
 import com.soccer.championship.service.ChampionshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -81,6 +83,11 @@ public class ChampionshipController {
     @RequestBody @Valid ChampionshipTeamsDTO teamsDTO) {
     championshipService.addTeams(championshipId, teamsDTO.teamIds());
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/status")
+  public ResponseEntity<List<EnumDto>> obterTodos() {
+    return ResponseEntity.ok(ChampionshipStatus.obterTodos());
   }
 
 }

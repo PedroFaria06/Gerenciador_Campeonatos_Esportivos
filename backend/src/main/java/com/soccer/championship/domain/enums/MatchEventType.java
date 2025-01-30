@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public enum MatchEventType {
+
     GOAL("1", "Gol"),
 
     OWN_GOAL("2", "Gol contra"),

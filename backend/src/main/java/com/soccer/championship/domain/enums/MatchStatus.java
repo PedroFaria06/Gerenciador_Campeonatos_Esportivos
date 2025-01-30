@@ -13,11 +13,14 @@ import java.util.List;
 public enum MatchStatus {
 
     SCHEDULED("1", "Agendado"),
-    IN_PROGRESS("2", "Em andamento"),
-    FINISHED("3", "Finalizado"),
-    CANCELLED("4", "Cancelado"),
-    POSTPONED("5", "Adiado");
 
+    IN_PROGRESS("2", "Em andamento"),
+
+    FINISHED("3", "Finalizado"),
+
+    CANCELLED("4", "Cancelado"),
+
+    POSTPONED("5", "Adiado");
 
   private final String codigo;
   private final String descricao;
