@@ -4,7 +4,7 @@
         <h1>Campeonatos</h1>
         <div class="buttons-container">
             <button class="btn-cadastrar" (click)="exibirFormularioCadastro()">Cadastrar</button>
-            <button class="btn-inscrever">Inscrever</button>
+            <button class="btn-inscrever" (click)="exibirFormularioInscricao()">Inscrever</button>
         </div>
   
         <div class="campeonatos-container">
@@ -42,28 +42,74 @@
             </div>
         </div>
     </div> 
-  
-    <!-- Cadastro -->
     <div class="modal" *ngIf="mostrarFormularioCadastro">
-      <div class="modal-content">
-        <h2>Cadastro de Campeonato</h2>
-        <form (ngSubmit)="cadastrarCampeonato()">
-          <label for="nome">Nome do Campeonato:</label>
-          <input id="nome" [(ngModel)]="novoCampeonato.nome" name="nome" required />
-  
-          <label for="dataInicio">Data de Início:</label>
-          <input id="dataInicio" type="date" [(ngModel)]="novoCampeonato.dataInicio" name="dataInicio" required />
-  
-          <label for="dataTermino">Data de Término:</label>
-          <input id="dataTermino" type="date" [(ngModel)]="novoCampeonato.dataTermino" name="dataTermino" required />
-  
-          <label for="local">Local:</label>
-          <input id="local" [(ngModel)]="novoCampeonato.local" name="local" required />
-  
-          <button type="submit">Cadastrar</button>
-          <button type="button" (click)="fecharFormularioCadastro()">Fechar</button>
-        </form>
-      </div>
+        <div class="modal-content">
+            <h2>Cadastro de Campeonato</h2>
+            <form (ngSubmit)="cadastrarCampeonato()">
+                <label for="nome">Nome do Campeonato:</label>
+                <input id="nome" [(ngModel)]="novoCampeonato.nome" name="nome" required />
+    
+                <label for="dataInicio">Data de Início:</label>
+                <input id="dataInicio" type="date" [(ngModel)]="novoCampeonato.dataInicio" name="dataInicio" required />
+    
+                <label for="dataTermino">Data de Término:</label>
+                <input id="dataTermino" type="date" [(ngModel)]="novoCampeonato.dataTermino" name="dataTermino" required />
+    
+                <label for="local">Local:</label>
+                <input id="local" [(ngModel)]="novoCampeonato.local" name="local" required />
+    
+                <button type="submit">Cadastrar</button>
+                <button type="button" (click)="fecharFormularioCadastro()">Fechar</button>
+            </form>
+        </div>
     </div>
-  </div>
-  
+    <div class="inscricao-container" *ngIf="mostrarFormularioInscricao">
+        <div class="inscricao-content">
+            <h2>Inscrição de Time</h2>
+            <form (ngSubmit)="selecionarTime()" class="inscricao-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="campeonato">Campeonato:</label>
+                        <select [(ngModel)]="campeonatoSelecionado" (ngModelChange)="onCampeonatoChange()" name="campeonato" id="campeonato" required>
+                            <option [ngValue]="null">Selecione um campeonato</option>
+                            <option [ngValue]="campeonato" *ngFor="let campeonato of campeonatos">
+                                {{ campeonato.nome }}
+                            </option>
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="time">Time:</label>
+                        <select [(ngModel)]="timeSelecionado" name="time" id="time" required [disabled]="!campeonatoSelecionado">
+                            <option [ngValue]="null">Selecione um time</option>
+                            <option [ngValue]="time" *ngFor="let time of campeonatoSelecionado?.times">
+                                {{ time.nome }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="button-group">
+                    <button type="submit" [disabled]="!campeonatoSelecionado || !timeSelecionado">Confirmar Inscrição</button>
+                    <button type="button" (click)="fecharFormularioInscricao()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal" *ngIf="mostrarFormularioTime">
+        <div class="modal-content">
+            <h2>Selecione o Time</h2>
+            <form (ngSubmit)="selecionarTime()">
+                <label for="time">Time para {{ campeonatoSelecionado?.nome }}:</label>
+                <select [(ngModel)]="timeSelecionado" name="time" id="time" required>
+                    <option [ngValue]="null">Selecione um time</option>
+                    <option [ngValue]="time" *ngFor="let time of campeonatoSelecionado?.times">
+                        {{ time.nome }}
+                    </option>
+                </select>
+                <button type="submit">Confirmar Inscrição</button>
+                <button type="button" (click)="fecharFormularioInscricao()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>

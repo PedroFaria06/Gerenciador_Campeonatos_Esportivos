@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-campeonato',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule],
   templateUrl: './campeonato.component.html',
   styleUrls: ['./campeonato.component.css']
 })
@@ -46,19 +46,29 @@ export class CampeonatoComponent {
       ]
     }
   ];
+
   novoCampeonato = {
     nome: '',
     dataInicio: '',
     dataTermino: '',
     local: ''
   };
+
   mostrarFormularioCadastro = false;
+  mostrarFormularioInscricao = false;
+  mostrarFormularioTime = false;
+
+  campeonatoSelecionado: any = null;
+  timeSelecionado: any = null;
+
   exibirFormularioCadastro() {
     this.mostrarFormularioCadastro = !this.mostrarFormularioCadastro;
   }
+
   fecharFormularioCadastro() {
     this.mostrarFormularioCadastro = false;
   }
+
   cadastrarCampeonato() {
     if (this.novoCampeonato.nome && this.novoCampeonato.dataInicio && this.novoCampeonato.dataTermino && this.novoCampeonato.local) {
       const data = `${this.novoCampeonato.dataInicio} - ${this.novoCampeonato.dataTermino}`;
@@ -66,30 +76,68 @@ export class CampeonatoComponent {
         nome: this.novoCampeonato.nome,
         status: 'Não Iniciado',
         local: this.novoCampeonato.local,
-        data: data, 
+        data: data,
         timesVisiveis: false,
         times: []
       });
 
       this.novoCampeonato = { nome: '', dataInicio: '', dataTermino: '', local: '' };
-      this.mostrarFormularioCadastro = false; 
+      this.mostrarFormularioCadastro = false;
     } else {
       alert('Por favor, preencha todos os campos.');
     }
   }
+
   toggleTimes(index: number) {
     this.campeonatos[index].timesVisiveis = !this.campeonatos[index].timesVisiveis;
   }
+
   excluirTime(campeonato: any, time: any) {
     const index = campeonato.times.indexOf(time);
     if (index !== -1) {
       campeonato.times.splice(index, 1);
     }
   }
+
   confirmarExclusao(campeonato: any, time: any) {
     const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${time.nome}?`);
     if (confirmacao) {
       this.excluirTime(campeonato, time);
     }
   }
+
+  exibirFormularioInscricao() {
+    this.mostrarFormularioInscricao = true;
+    this.mostrarFormularioTime = false;
+    this.campeonatoSelecionado = null;
+    this.timeSelecionado = null;
+  }
+
+  selecionarCampeonato() {
+    if (this.campeonatoSelecionado) {
+      this.mostrarFormularioInscricao = false;
+      this.mostrarFormularioTime = true;
+    } else {
+      alert('Por favor, selecione um campeonato.');
+    }
+  }
+
+  selecionarTime() {
+    if (this.timeSelecionado) {
+      alert(`Inscrição realizada com sucesso!\nCampeonato: ${this.campeonatoSelecionado.nome}\nTime: ${this.timeSelecionado.nome}`);
+      this.fecharFormularioInscricao();
+    } else {
+      alert('Por favor, selecione um time.');
+    }
+  }
+
+  fecharFormularioInscricao() {
+    this.mostrarFormularioInscricao = false;
+    this.mostrarFormularioTime = false;
+    this.campeonatoSelecionado = null;
+    this.timeSelecionado = null;
+  }
+  onCampeonatoChange() {
+    this.timeSelecionado = null;
+}
 }
