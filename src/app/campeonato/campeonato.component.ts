@@ -140,4 +140,7 @@ export class CampeonatoComponent {
   onCampeonatoChange() {
     this.timeSelecionado = null;
 }
+atualizarStatus(campeonato: any, novoStatus: string) {
+  campeonato.status = novoStatus;
+}
 }
