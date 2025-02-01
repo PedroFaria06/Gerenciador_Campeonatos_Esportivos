@@ -61,6 +61,13 @@ export class CampeonatoComponent {
   campeonatoSelecionado: any = null;
   timeSelecionado: any = null;
 
+  mostrarModalEditarTime = false;
+    campeonatoEmEdicao: any = null;
+    timeSelecionadoParaEdicao: any = null;
+    novoNomeTime: string = '';
+
+  mostrarModalRemoverTime = false;
+  timeSelecionadoParaRemocao: any = null;
   exibirFormularioCadastro() {
     this.mostrarFormularioCadastro = !this.mostrarFormularioCadastro;
   }
@@ -139,8 +146,56 @@ export class CampeonatoComponent {
   }
   onCampeonatoChange() {
     this.timeSelecionado = null;
-}
-atualizarStatus(campeonato: any, novoStatus: string) {
-  campeonato.status = novoStatus;
-}
+  }
+  atualizarStatus(campeonato: any, novoStatus: string) {
+    campeonato.status = novoStatus;
+  }
+  abrirModalEditarTime(campeonato: any) {
+    this.campeonatoEmEdicao = campeonato;
+    this.mostrarModalEditarTime = true;
+    this.timeSelecionadoParaEdicao = null;
+    this.novoNomeTime = '';
+  }
+
+  fecharModalEditarTime() {
+    this.mostrarModalEditarTime = false;
+    this.campeonatoEmEdicao = null;
+    this.timeSelecionadoParaEdicao = null;
+    this.novoNomeTime = '';
+  }
+  salvarEdicaoTime() {
+    if (this.timeSelecionadoParaEdicao && this.novoNomeTime.trim()) {
+      this.timeSelecionadoParaEdicao.nome = this.novoNomeTime.trim();
+      this.fecharModalEditarTime();
+      alert('Nome do time atualizado com sucesso!');
+    } else {
+      alert('Por favor, preencha todos os campos.');
+    }
+  }
+
+  abrirModalRemoverTime(campeonato: any) {
+    this.campeonatoEmEdicao = campeonato;
+    this.mostrarModalRemoverTime = true;
+    this.timeSelecionadoParaRemocao = null;
+  }
+  fecharModalRemoverTime() {
+    this.mostrarModalRemoverTime = false;
+    this.campeonatoEmEdicao = null;
+    this.timeSelecionadoParaRemocao = null;
+  }
+  confirmarRemocaoTime() {
+    if (this.timeSelecionadoParaRemocao) {
+        const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${this.timeSelecionadoParaRemocao.nome}?`);
+        if (confirmacao) {
+            const index = this.campeonatoEmEdicao.times.indexOf(this.timeSelecionadoParaRemocao);
+            if (index !== -1) {
+                this.campeonatoEmEdicao.times.splice(index, 1);
+                this.fecharModalRemoverTime();
+                alert('Time removido com sucesso!');
+            }
+        }
+    } else {
+        alert('Por favor, selecione um time para remover.');
+    }
+  }
 }
