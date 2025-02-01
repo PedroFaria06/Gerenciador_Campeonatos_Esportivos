@@ -53,29 +53,29 @@ export class CampeonatoComponent {
     dataTermino: '',
     local: ''
   };
-
   mostrarFormularioCadastro = false;
   mostrarFormularioInscricao = false;
   mostrarFormularioTime = false;
-
   campeonatoSelecionado: any = null;
   timeSelecionado: any = null;
-
   mostrarModalEditarTime = false;
     campeonatoEmEdicao: any = null;
     timeSelecionadoParaEdicao: any = null;
     novoNomeTime: string = '';
 
+  notificacao = {
+    mensagem: '',
+    tipo: 'sucesso',
+    mostrar: false
+  };
   mostrarModalRemoverTime = false;
   timeSelecionadoParaRemocao: any = null;
   exibirFormularioCadastro() {
     this.mostrarFormularioCadastro = !this.mostrarFormularioCadastro;
   }
-
   fecharFormularioCadastro() {
     this.mostrarFormularioCadastro = false;
   }
-
   cadastrarCampeonato() {
     if (this.novoCampeonato.nome && this.novoCampeonato.dataInicio && this.novoCampeonato.dataTermino && this.novoCampeonato.local) {
       const data = `${this.novoCampeonato.dataInicio} - ${this.novoCampeonato.dataTermino}`;
@@ -94,32 +94,27 @@ export class CampeonatoComponent {
       alert('Por favor, preencha todos os campos.');
     }
   }
-
   toggleTimes(index: number) {
     this.campeonatos[index].timesVisiveis = !this.campeonatos[index].timesVisiveis;
   }
-
   excluirTime(campeonato: any, time: any) {
     const index = campeonato.times.indexOf(time);
     if (index !== -1) {
       campeonato.times.splice(index, 1);
     }
   }
-
   confirmarExclusao(campeonato: any, time: any) {
     const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${time.nome}?`);
     if (confirmacao) {
       this.excluirTime(campeonato, time);
     }
   }
-
   exibirFormularioInscricao() {
     this.mostrarFormularioInscricao = true;
     this.mostrarFormularioTime = false;
     this.campeonatoSelecionado = null;
     this.timeSelecionado = null;
   }
-
   selecionarCampeonato() {
     if (this.campeonatoSelecionado) {
       this.mostrarFormularioInscricao = false;
@@ -128,7 +123,6 @@ export class CampeonatoComponent {
       alert('Por favor, selecione um campeonato.');
     }
   }
-
   selecionarTime() {
     if (this.timeSelecionado) {
       alert(`Inscrição realizada com sucesso!\nCampeonato: ${this.campeonatoSelecionado.nome}\nTime: ${this.timeSelecionado.nome}`);
@@ -165,14 +159,13 @@ export class CampeonatoComponent {
   }
   salvarEdicaoTime() {
     if (this.timeSelecionadoParaEdicao && this.novoNomeTime.trim()) {
-      this.timeSelecionadoParaEdicao.nome = this.novoNomeTime.trim();
-      this.fecharModalEditarTime();
-      alert('Nome do time atualizado com sucesso!');
+        this.timeSelecionadoParaEdicao.nome = this.novoNomeTime.trim();
+        this.fecharModalEditarTime();
+        this.mostrarNotificacao('Time editado com sucesso!', 'sucesso');
     } else {
-      alert('Por favor, preencha todos os campos.');
+        this.mostrarNotificacao('Por favor, preencha todos os campos.', 'erro');
     }
   }
-
   abrirModalRemoverTime(campeonato: any) {
     this.campeonatoEmEdicao = campeonato;
     this.mostrarModalRemoverTime = true;
@@ -191,11 +184,26 @@ export class CampeonatoComponent {
             if (index !== -1) {
                 this.campeonatoEmEdicao.times.splice(index, 1);
                 this.fecharModalRemoverTime();
-                alert('Time removido com sucesso!');
+                this.mostrarNotificacao('Time removido com sucesso!', 'sucesso');
             }
         }
     } else {
-        alert('Por favor, selecione um time para remover.');
+        this.mostrarNotificacao('Por favor, selecione um time para remover.', 'erro');
     }
   }
+  mostrarNotificacao(mensagem: string, tipo: 'sucesso' | 'erro') {
+    this.notificacao = {
+        mensagem,
+        tipo,
+        mostrar: true
+    };
+    setTimeout(() => {
+        this.fecharNotificacao();
+    }, 3000);
+  }
+
+  fecharNotificacao() {
+    this.notificacao.mostrar = false;
+  }
+
 }

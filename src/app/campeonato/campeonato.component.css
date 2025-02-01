@@ -415,3 +415,45 @@ button[type="button"]:hover {
 .dropdown-content a:hover, .dropdown-submenu-content a:hover {
   background-color: #f1f1f1;
 }
+.notificacao {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px;
+  border-radius: 4px;
+  color: white;
+  z-index: 1000;
+  animation: slideIn 0.5s ease-in-out;
+}
+.notificacao-conteudo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.notificacao.sucesso {
+  background-color: #4CAF50;
+}
+.notificacao.erro {
+  background-color: #f44336;
+}
+.fechar-notificacao {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 5px;
+}
+.fechar-notificacao:hover {
+  opacity: 0.8;
+}
+@keyframes slideIn {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}

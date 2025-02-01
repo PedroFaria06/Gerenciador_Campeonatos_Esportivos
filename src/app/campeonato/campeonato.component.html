@@ -167,4 +167,10 @@
             </form>
         </div>
     </div>
+    <div *ngIf="notificacao.mostrar" class="notificacao" [ngClass]="notificacao.tipo">
+        <div class="notificacao-conteudo">
+            <span>{{ notificacao.mensagem }}</span>
+            <button class="fechar-notificacao" (click)="fecharNotificacao()">×</button>
+        </div>
+    </div>
 </div>
