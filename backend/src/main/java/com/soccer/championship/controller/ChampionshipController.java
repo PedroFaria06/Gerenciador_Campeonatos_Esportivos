@@ -9,6 +9,7 @@ import com.soccer.championship.domain.enums.ChampionshipStatus;
 import com.soccer.championship.domain.enums.MatchStatus;
 import com.soccer.championship.service.ChampionshipService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ChampionshipController {
 
   @GetMapping
   @Operation(summary = "Listar todos os campeonatos", description = "Retorna uma lista paginada de campeonatos")
-  public ResponseEntity<Page<ChampionshipDTO>> findAll(Pageable pageable) {
+  public ResponseEntity<Page<ChampionshipDTO>> findAll(@Parameter(hidden = true) Pageable pageable) {
     return ResponseEntity.ok(championshipService.findAll(pageable));
   }
 

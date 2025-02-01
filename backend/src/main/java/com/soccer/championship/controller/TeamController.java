@@ -3,6 +3,7 @@ package com.soccer.championship.controller;
 import com.soccer.championship.domain.dto.TeamDTO;
 import com.soccer.championship.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class TeamController {
 
   @GetMapping
   @Operation(summary = "Listar todos os times", description = "Retorna uma lista paginada de times")
-  public ResponseEntity<Page<TeamDTO>> findAll(Pageable pageable) {
+  public ResponseEntity<Page<TeamDTO>> findAll(@Parameter(hidden = true) Pageable pageable) {
     return ResponseEntity.ok(teamService.findAll(pageable));
   }
 

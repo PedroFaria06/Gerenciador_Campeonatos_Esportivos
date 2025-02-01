@@ -5,6 +5,7 @@ import com.soccer.championship.domain.dto.PlayerDTO;
 import com.soccer.championship.domain.enums.PlayerPosition;
 import com.soccer.championship.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class PlayerController {
 
   @GetMapping
   @Operation(summary = "Listar todos os jogadores", description = "Retorna uma lista paginada de jogadores")
-  public ResponseEntity<Page<PlayerDTO>> findAll(Pageable pageable) {
+  public ResponseEntity<Page<PlayerDTO>> findAll(@Parameter(hidden = true) Pageable pageable) {
     return ResponseEntity.ok(playerService.findAll(pageable));
   }
 

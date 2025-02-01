@@ -7,6 +7,7 @@ import com.soccer.championship.domain.enums.MatchStatus;
 import com.soccer.championship.domain.enums.PlayerPosition;
 import com.soccer.championship.service.MatchService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class MatchController {
   @Operation(summary = "Listar partidas por campeonato", description = "Retorna uma lista paginada de partidas de um campeonato específico")
   public ResponseEntity<Page<MatchDTO>> findByChampionship(
     @PathVariable Long championshipId,
-    Pageable pageable) {
+    @Parameter(hidden = true) Pageable pageable) {
     return ResponseEntity.ok(matchService.findByChampionship(championshipId, pageable));
   }
 
