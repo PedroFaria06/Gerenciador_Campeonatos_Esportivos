@@ -7,7 +7,7 @@ import com.soccer.championship.domain.entity.Match;
 import com.soccer.championship.domain.entity.Team;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {TeamMapper.class, ChampionshipMapper.class})
+@Mapper(componentModel = "spring", uses = {TeamMapper.class, ChampionshipMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface MatchMapper {
 
   @Mapping(target = "championshipId", source = "championship.id")

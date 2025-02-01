@@ -86,6 +86,7 @@ public class ChampionshipController {
   }
 
   @GetMapping("/status")
+  @Operation(summary = "Obtém todos os status do campeonato", description = "Obtém todos os status do campeonato")
   public ResponseEntity<List<EnumDto>> obterTodos() {
     return ResponseEntity.ok(ChampionshipStatus.obterTodos());
   }

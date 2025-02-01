@@ -11,9 +11,15 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public enum ChampionshipStatus {
-    CREATED("1", "Criado"),
-    IN_PROGRESS("2", "Em andamento"),
-    FINISHED("3", "Finalizado");
+  DRAFT("1", "Rascunho"),
+
+  REGISTRATION("2", "Em cadastro"),
+
+  IN_PROGRESS("3", "Em andamento"),
+
+  FINISHED("4", "Finalizado"),
+
+  CANCELLED("5", "Cancelado");
 
   private final String codigo;
   private final String descricao;

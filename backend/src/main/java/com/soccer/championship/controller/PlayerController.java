@@ -63,6 +63,7 @@ public class PlayerController {
   }
 
   @GetMapping("/positions")
+  @Operation(summary = "Obtém todas as posições de jogadores", description = "Obtém todas as posições de jogadores")
   public ResponseEntity<List<EnumDto>> obterTodos() {
     return ResponseEntity.ok(PlayerPosition.obterTodos());
   }

@@ -69,6 +69,7 @@ public class MatchController {
   }
 
   @GetMapping("/status")
+  @Operation(summary = "Obtém todos os status da partida", description = "Obtém todos os status da partida")
   public ResponseEntity<List<EnumDto>> obterTodos() {
     return ResponseEntity.ok(MatchStatus.obterTodos());
   }
