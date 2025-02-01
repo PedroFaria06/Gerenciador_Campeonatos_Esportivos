@@ -14,18 +14,18 @@ import java.util.List;
 @Repository
 public interface MatchEventRepository extends JpaRepository<MatchEvent, Long> {
 
-    Page<MatchEvent> findByMatchId(Long matchId, Pageable pageable);
+  Page<MatchEvent> findByMatchId(Long matchId, Pageable pageable);
 
-    List<MatchEvent> findByMatchIdAndEventType(Long matchId, MatchEventType eventType);
+  List<MatchEvent> findByMatchIdAndEventType(Long matchId, MatchEventType eventType);
 
-    @Query("SELECT e FROM MatchEvent e WHERE e.match.championship.id = ?1 AND e.player.id = ?2")
-    List<MatchEvent> findByChampionshipIdAndPlayerId(Long championshipId, Long playerId);
+  @Query("SELECT e FROM MatchEvent e WHERE e.match.championship.id = ?1 AND e.player.id = ?2")
+  List<MatchEvent> findByChampionshipIdAndPlayerId(Long championshipId, Long playerId);
 
-    @Query("SELECT COUNT(e) FROM MatchEvent e WHERE e.match.championship.id = ?1 " +
-           "AND e.player.id = ?2 AND e.eventType = ?3")
-    long countByChampionshipAndPlayerAndEventType(
-        Long championshipId,
-        Long playerId,
-        MatchEventType eventType
-    );
+  @Query("SELECT COUNT(e) FROM MatchEvent e WHERE e.match.championship.id = ?1 " +
+    "AND e.player.id = ?2 AND e.eventType = ?3")
+  long countByChampionshipAndPlayerAndEventType(
+    Long championshipId,
+    Long playerId,
+    MatchEventType eventType
+  );
 }

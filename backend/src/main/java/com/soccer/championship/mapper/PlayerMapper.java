@@ -3,12 +3,9 @@ package com.soccer.championship.mapper;
 import com.soccer.championship.domain.dto.PlayerDTO;
 import com.soccer.championship.domain.entity.Player;
 import com.soccer.championship.domain.entity.Team;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {TeamMapper.class})
+@Mapper(componentModel = "spring", uses = {TeamMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PlayerMapper {
 
     @Mapping(target = "teamId", source = "team.id")

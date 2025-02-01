@@ -171,7 +171,7 @@ public class MatchService {
 
   private void validateMatchStatus(Match match, MatchDTO matchDTO) {
     if (match.getStatus() == MatchStatus.FINISHED && matchDTO.status() != MatchStatus.FINISHED) {
-      throw new BusinessException("Não é possível alterar o status de uma partida finalizada");
+      updateChampionshipStats(match);
     }
   }
 

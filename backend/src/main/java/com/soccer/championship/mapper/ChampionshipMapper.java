@@ -9,7 +9,7 @@ import org.mapstruct.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {TeamMapper.class})
+@Mapper(componentModel = "spring", uses = {TeamMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ChampionshipMapper {
 
   @Mapping(target = "teamIds", expression = "java(getTeamIds(championship))")

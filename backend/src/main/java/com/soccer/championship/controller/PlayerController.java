@@ -1,6 +1,8 @@
 package com.soccer.championship.controller;
 
+import com.soccer.championship.domain.dto.EnumDto;
 import com.soccer.championship.domain.dto.PlayerDTO;
+import com.soccer.championship.domain.enums.PlayerPosition;
 import com.soccer.championship.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/players")
@@ -58,4 +62,9 @@ public class PlayerController {
     return ResponseEntity.noContent().build();
   }
 
+  @GetMapping("/positions")
+  @Operation(summary = "Obtém todas as posições de jogadores", description = "Obtém todas as posições de jogadores")
+  public ResponseEntity<List<EnumDto>> obterTodos() {
+    return ResponseEntity.ok(PlayerPosition.obterTodos());
+  }
 }

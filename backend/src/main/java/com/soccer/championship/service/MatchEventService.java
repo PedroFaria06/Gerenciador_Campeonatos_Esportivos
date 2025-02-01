@@ -75,6 +75,14 @@ public class MatchEventService {
     if (event.getMatch().getStatus() == MatchStatus.FINISHED) {
       throw new BusinessException("Não é possível excluir eventos de uma partida finalizada");
     }
+
+    // Se for um gol, atualiza o placar
+    if (event.getEventType() == MatchEventType.GOAL ||
+      event.getEventType() == MatchEventType.OWN_GOAL ||
+      event.getEventType() == MatchEventType.PENALTY_SCORED) {
+      revertMatchScore(event);
+    }
+
     matchEventRepository.deleteById(id);
   }
 
