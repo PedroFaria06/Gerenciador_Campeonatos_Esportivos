@@ -59,10 +59,9 @@ export class CampeonatoComponent {
   campeonatoSelecionado: any = null;
   timeSelecionado: any = null;
   mostrarModalEditarTime = false;
-    campeonatoEmEdicao: any = null;
-    timeSelecionadoParaEdicao: any = null;
-    novoNomeTime: string = '';
-
+  campeonatoEmEdicao: any = null;
+  timeSelecionadoParaEdicao: any = null;
+  novoNomeTime: string = '';
   notificacao = {
     mensagem: '',
     tipo: 'sucesso',
@@ -78,20 +77,21 @@ export class CampeonatoComponent {
   }
   cadastrarCampeonato() {
     if (this.novoCampeonato.nome && this.novoCampeonato.dataInicio && this.novoCampeonato.dataTermino && this.novoCampeonato.local) {
-      const data = `${this.novoCampeonato.dataInicio} - ${this.novoCampeonato.dataTermino}`;
-      this.campeonatos.push({
-        nome: this.novoCampeonato.nome,
-        status: 'Não Iniciado',
-        local: this.novoCampeonato.local,
-        data: data,
-        timesVisiveis: false,
-        times: []
-      });
+        const data = `${this.novoCampeonato.dataInicio} - ${this.novoCampeonato.dataTermino}`;
+        this.campeonatos.push({
+            nome: this.novoCampeonato.nome,
+            status: 'Não Iniciado',
+            local: this.novoCampeonato.local,
+            data: data,
+            timesVisiveis: false,
+            times: []
+        });
 
-      this.novoCampeonato = { nome: '', dataInicio: '', dataTermino: '', local: '' };
-      this.mostrarFormularioCadastro = false;
+        this.novoCampeonato = { nome: '', dataInicio: '', dataTermino: '', local: '' };
+        this.mostrarFormularioCadastro = false;
+        this.mostrarNotificacao('Cadastro realizado com sucesso!', 'sucesso');
     } else {
-      alert('Por favor, preencha todos os campos.');
+        this.mostrarNotificacao('Por favor, preencha todos os campos.', 'erro');
     }
   }
   toggleTimes(index: number) {
@@ -111,9 +111,8 @@ export class CampeonatoComponent {
   }
   exibirFormularioInscricao() {
     this.mostrarFormularioInscricao = true;
-    this.mostrarFormularioTime = false;
     this.campeonatoSelecionado = null;
-    this.timeSelecionado = null;
+    this.novoNomeTime = '';
   }
   selecionarCampeonato() {
     if (this.campeonatoSelecionado) {
@@ -124,19 +123,22 @@ export class CampeonatoComponent {
     }
   }
   selecionarTime() {
-    if (this.timeSelecionado) {
-      alert(`Inscrição realizada com sucesso!\nCampeonato: ${this.campeonatoSelecionado.nome}\nTime: ${this.timeSelecionado.nome}`);
-      this.fecharFormularioInscricao();
+    if (this.campeonatoSelecionado && this.novoNomeTime.trim()) {
+        const novoTime = {
+            nome: this.novoNomeTime.trim()
+        };
+        this.campeonatoSelecionado.times.push(novoTime);
+        this.mostrarNotificacao('Inscrição salva com sucesso!', 'sucesso');
+        this.fecharFormularioInscricao();
     } else {
-      alert('Por favor, selecione um time.');
+        this.mostrarNotificacao('Por favor, preencha todos os campos.', 'erro');
     }
-  }
+}
 
   fecharFormularioInscricao() {
     this.mostrarFormularioInscricao = false;
-    this.mostrarFormularioTime = false;
     this.campeonatoSelecionado = null;
-    this.timeSelecionado = null;
+    this.novoNomeTime = '';
   }
   onCampeonatoChange() {
     this.timeSelecionado = null;
@@ -178,7 +180,10 @@ export class CampeonatoComponent {
   }
   confirmarRemocaoTime() {
     if (this.timeSelecionadoParaRemocao) {
-        const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${this.timeSelecionadoParaRemocao.nome}?`);
+        const confirmacao = window.confirm(
+            `Ao remover a inscrição do time ${this.timeSelecionadoParaRemocao.nome}, será necessário realizá-la novamente para participar do campeonato. Deseja remover mesmo assim?`
+        );
+        
         if (confirmacao) {
             const index = this.campeonatoEmEdicao.times.indexOf(this.timeSelecionadoParaRemocao);
             if (index !== -1) {
@@ -205,5 +210,4 @@ export class CampeonatoComponent {
   fecharNotificacao() {
     this.notificacao.mostrar = false;
   }
-
 }

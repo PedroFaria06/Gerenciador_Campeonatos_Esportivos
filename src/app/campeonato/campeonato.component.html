@@ -78,7 +78,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="campeonato">Campeonato:</label>
-                        <select [(ngModel)]="campeonatoSelecionado" (ngModelChange)="onCampeonatoChange()" name="campeonato" id="campeonato" required>
+                        <select [(ngModel)]="campeonatoSelecionado" name="campeonato" id="campeonato" required>
                             <option [ngValue]="null">Selecione um campeonato</option>
                             <option [ngValue]="campeonato" *ngFor="let campeonato of campeonatos">
                                 {{ campeonato.nome }}
@@ -87,18 +87,21 @@
                     </div>
     
                     <div class="form-group">
-                        <label for="time">Time:</label>
-                        <select [(ngModel)]="timeSelecionado" name="time" id="time" required [disabled]="!campeonatoSelecionado">
-                            <option [ngValue]="null">Selecione um time</option>
-                            <option [ngValue]="time" *ngFor="let time of campeonatoSelecionado?.times">
-                                {{ time.nome }}
-                            </option>
-                        </select>
+                        <label for="nomeTime">Nome do Time:</label>
+                        <input 
+                            type="text" 
+                            id="nomeTime" 
+                            [(ngModel)]="novoNomeTime" 
+                            name="nomeTime" 
+                            required
+                            [disabled]="!campeonatoSelecionado"
+                            placeholder="Digite o nome do time"
+                        />
                     </div>
                 </div>
     
                 <div class="button-group">
-                    <button type="submit" [disabled]="!campeonatoSelecionado || !timeSelecionado">Confirmar Inscrição</button>
+                    <button type="submit" [disabled]="!campeonatoSelecionado || !novoNomeTime">Confirmar Inscrição</button>
                     <button type="button" (click)="fecharFormularioInscricao()">Cancelar</button>
                 </div>
             </form>
