@@ -1,8 +1,15 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
-import { routes } from './app/app.routes'; // Importando corretamente o routes
+import { importProvidersFrom } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app-routing.module'; 
 
 bootstrapApplication(AppComponent, {
-  providers: [provideRouter(routes)], // Usando o objeto routes exportado
-}).catch((err) => console.error(err));
+  providers: [
+    importProvidersFrom(BrowserModule, FormsModule, HttpClientModule),
+    provideRouter(routes) 
+  ]
+});

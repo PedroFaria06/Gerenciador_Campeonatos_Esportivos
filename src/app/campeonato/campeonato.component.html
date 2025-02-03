@@ -1,115 +1,81 @@
 <div class="dashboard-container">
-    <!-- Conteúdo Principal -->
-    <div class="content">
-        <h1>Campeonatos</h1>
-        <div class="buttons-container">
-            <button class="btn-cadastrar" (click)="exibirFormularioCadastro()">Cadastrar</button>
-            <button class="btn-inscrever" (click)="exibirFormularioInscricao()">Inscrever</button>
+  <div class="content">
+    <h1>Campeonatos</h1>
+    <button class="btn-cadastrar" (click)="exibirFormularioCadastro()">Cadastrar Campeonato</button>
+
+    <div *ngIf="campeonatos.length > 0; else semCampeonatos">
+      <div *ngFor="let campeonato of campeonatos" class="campeonato-card">
+        <div class="campeonato-header">
+          <span class="campeonato-nome">{{ campeonato.name }}</span>
+          <span class="status">{{ campeonato.status }}</span>
         </div>
-  
-        <div class="campeonatos-container">
-            <div *ngFor="let campeonato of campeonatos; let i = index" class="campeonato-card">
-                <div class="campeonato-header" (click)="toggleTimes(i)">
-                    <span class="campeonato-nome">{{ campeonato.nome }}</span>
-                    <span class="status {{ campeonato.status | lowercase }}">{{ campeonato.status }}</span>
-                </div>
-                <div class="info">
-                    <span>📍 {{ campeonato.local }}</span>
-                    <span>📅 {{ campeonato.data }}</span>
-                </div>
-  
-                <!-- Times Participantes -->
-                <div *ngIf="campeonato.timesVisiveis" class="times-participantes">
-                    <div class="times-header">
-                        <h3>Times participantes</h3>
-                        <div class="dropdown" style="margin-left: auto;">
-                            <button class="dropbtn">Opções</button>
-                            <div class="dropdown-content">
-                                <a href="#">Editar</a>
-                                <a href="#">Remover</a>
-                                <a href="#">Status</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid-times">
-                        <div *ngFor="let time of campeonato.times" class="time-card">
-                            <div class="time-imagem"></div>
-                            <span class="time-nome">{{ time.nome }}</span>
-                            <button (click)="confirmarExclusao(campeonato, time)" class="excluir-btn">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="info">
+          <span>📅 {{ campeonato.startDate | date: 'dd/MM/yyyy' }} - {{ campeonato.endDate | date: 'dd/MM/yyyy' }}</span>
+          <span>🏆 Temporada: {{ campeonato.season }}</span>
         </div>
-    </div> 
-    <div class="modal" *ngIf="mostrarFormularioCadastro">
-        <div class="modal-content">
-            <h2>Cadastro de Campeonato</h2>
-            <form (ngSubmit)="cadastrarCampeonato()">
-                <label for="nome">Nome do Campeonato:</label>
-                <input id="nome" [(ngModel)]="novoCampeonato.nome" name="nome" required />
-    
-                <label for="dataInicio">Data de Início:</label>
-                <input id="dataInicio" type="date" [(ngModel)]="novoCampeonato.dataInicio" name="dataInicio" required />
-    
-                <label for="dataTermino">Data de Término:</label>
-                <input id="dataTermino" type="date" [(ngModel)]="novoCampeonato.dataTermino" name="dataTermino" required />
-    
-                <label for="local">Local:</label>
-                <input id="local" [(ngModel)]="novoCampeonato.local" name="local" required />
-    
-                <button type="submit">Cadastrar</button>
-                <button type="button" (click)="fecharFormularioCadastro()">Fechar</button>
-            </form>
-        </div>
+      </div>
     </div>
-    <div class="inscricao-container" *ngIf="mostrarFormularioInscricao">
-        <div class="inscricao-content">
-            <h2>Inscrição de Time</h2>
-            <form (ngSubmit)="selecionarTime()" class="inscricao-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="campeonato">Campeonato:</label>
-                        <select [(ngModel)]="campeonatoSelecionado" (ngModelChange)="onCampeonatoChange()" name="campeonato" id="campeonato" required>
-                            <option [ngValue]="null">Selecione um campeonato</option>
-                            <option [ngValue]="campeonato" *ngFor="let campeonato of campeonatos">
-                                {{ campeonato.nome }}
-                            </option>
-                        </select>
-                    </div>
-    
-                    <div class="form-group">
-                        <label for="time">Time:</label>
-                        <select [(ngModel)]="timeSelecionado" name="time" id="time" required [disabled]="!campeonatoSelecionado">
-                            <option [ngValue]="null">Selecione um time</option>
-                            <option [ngValue]="time" *ngFor="let time of campeonatoSelecionado?.times">
-                                {{ time.nome }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-    
-                <div class="button-group">
-                    <button type="submit" [disabled]="!campeonatoSelecionado || !timeSelecionado">Confirmar Inscrição</button>
-                    <button type="button" (click)="fecharFormularioInscricao()">Cancelar</button>
-                </div>
-            </form>
+
+    <ng-template #semCampeonatos>
+      <p class="mensagem">Nenhum campeonato cadastrado.</p>
+    </ng-template>
+  </div>
+
+  <div class="modal" *ngIf="mostrarFormularioCadastro">
+    <div class="modal-content">
+      <h2>Cadastro de Campeonato</h2>
+      <form (ngSubmit)="cadastrarCampeonato()">
+        <label for="name">Nome do Campeonato:</label>
+        <input 
+          id="name" 
+          [(ngModel)]="novoCampeonato.name" 
+          name="name" 
+          required 
+        />
+
+        <label for="startDate">Data de Início:</label>
+        <input 
+          id="startDate" 
+          type="date" 
+          [(ngModel)]="novoCampeonato.startDate" 
+          name="startDate" 
+          required 
+        />
+
+        <label for="endDate">Data de Término:</label>
+        <input 
+          id="endDate" 
+          type="date" 
+          [(ngModel)]="novoCampeonato.endDate" 
+          name="endDate" 
+          required 
+        />
+
+        <label for="season">Temporada:</label>
+        <input 
+          id="season" 
+          [(ngModel)]="novoCampeonato.season" 
+          name="season" 
+          required 
+        />
+
+        <label for="status">Status:</label>
+        <select 
+          id="status" 
+          [(ngModel)]="novoCampeonato.status" 
+          name="status" 
+          required
+        >
+          <option value="PLANNING">Planejamento</option>
+          <option value="ACTIVE">Ativo</option>
+          <option value="FINISHED">Finalizado</option>
+        </select>
+
+        <div class="botoes">
+          <button type="submit">Cadastrar</button>
+          <button type="button" (click)="fecharFormularioCadastro()">Cancelar</button>
         </div>
+      </form>
     </div>
-    <div class="modal" *ngIf="mostrarFormularioTime">
-        <div class="modal-content">
-            <h2>Selecione o Time</h2>
-            <form (ngSubmit)="selecionarTime()">
-                <label for="time">Time para {{ campeonatoSelecionado?.nome }}:</label>
-                <select [(ngModel)]="timeSelecionado" name="time" id="time" required>
-                    <option [ngValue]="null">Selecione um time</option>
-                    <option [ngValue]="time" *ngFor="let time of campeonatoSelecionado?.times">
-                        {{ time.nome }}
-                    </option>
-                </select>
-                <button type="submit">Confirmar Inscrição</button>
-                <button type="button" (click)="fecharFormularioInscricao()">Cancelar</button>
-            </form>
-        </div>
-    </div>
+  </div>
 </div>

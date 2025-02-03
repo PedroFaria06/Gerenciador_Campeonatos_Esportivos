@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "SoccerChampionshipManagerApplication",
+      "request": "launch",
+      "mainClass": "com.soccer.championship.SoccerChampionshipManagerApplication",
+      "projectName": "championship-manager"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

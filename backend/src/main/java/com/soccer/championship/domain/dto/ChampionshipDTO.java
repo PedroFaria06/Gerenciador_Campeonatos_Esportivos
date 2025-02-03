@@ -1,5 +1,6 @@
 package com.soccer.championship.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.soccer.championship.domain.enums.ChampionshipStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +17,10 @@ public record ChampionshipDTO(
   String name,
 
   @NotNull(message = "A data de início é obrigatória")
+  @JsonFormat(pattern = "yyyy-MM-dd") 
   LocalDate startDate,
 
+  @JsonFormat(pattern = "yyyy-MM-dd") 
   LocalDate endDate,
 
   @NotBlank(message = "A temporada é obrigatória")

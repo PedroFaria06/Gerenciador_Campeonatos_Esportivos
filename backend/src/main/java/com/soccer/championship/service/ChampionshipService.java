@@ -43,6 +43,7 @@ public class ChampionshipService {
     return championshipRepository.findByStatus(status, pageable)
       .map(championshipMapper::toDTO);
   }
+  
 
   @Transactional(readOnly = true)
   public ChampionshipDTO findById(Long id) {
@@ -77,19 +78,21 @@ public class ChampionshipService {
 
   @Transactional
   public ChampionshipDTO create(ChampionshipDTO championshipDTO) {
-    log.debug("Criando novo campeonato: {}", championshipDTO);
-
-    validateNameAndSeason(championshipDTO);
-
-    Championship championship = championshipMapper.toEntity(championshipDTO);
-
-    if (championshipDTO.teamIds() != null && !championshipDTO.teamIds().isEmpty()) {
-      addTeamsToChampionship(championship, championshipDTO.teamIds());
-    }
-
-    championship = championshipRepository.save(championship);
-    return championshipMapper.toDTO(championship);
+      log.debug("Criando novo campeonato: {}", championshipDTO);
+  
+      validateNameAndSeason(championshipDTO);
+  
+      Championship championship = championshipMapper.toEntity(championshipDTO);
+  
+      if (championshipDTO.teamIds() != null && !championshipDTO.teamIds().isEmpty()) {
+          addTeamsToChampionship(championship, championshipDTO.teamIds());
+      }
+  
+      championship = championshipRepository.save(championship);
+      log.debug("Campeonato criado com sucesso: {}", championship);
+      return championshipMapper.toDTO(championship);
   }
+  
 
   @Transactional
   public ChampionshipDTO update(Long id, ChampionshipDTO championshipDTO) {
