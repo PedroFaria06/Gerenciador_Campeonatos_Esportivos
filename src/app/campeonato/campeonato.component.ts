@@ -21,21 +21,8 @@ export class CampeonatoComponent implements OnInit {
     status: 'ACTIVE' // Status padrão alterado para "Em andamento"
   };
   mostrarFormularioCadastro = false;
-<<<<<<< HEAD
 
-  constructor(private campeonatoService: CampeonatoService) {}
-
-  ngOnInit() {
-    this.carregarCampeonatos();
-  }
-
-  carregarCampeonatos() {
-    this.campeonatoService.getCampeonatos().subscribe(data => {
-      this.campeonatos = data.content || [];
-    });
-  }
-
-=======
+  // Variáveis adicionais para o controle de formulários
   mostrarFormularioInscricao = false;
   mostrarFormularioTime = false;
   campeonatoSelecionado: any = null;
@@ -51,35 +38,54 @@ export class CampeonatoComponent implements OnInit {
   };
   mostrarModalRemoverTime = false;
   timeSelecionadoParaRemocao: any = null;
->>>>>>> 72dbae68dc6d8eacd7e195a4c92b5bff037fad3f
+
+  constructor(private campeonatoService: CampeonatoService) {}
+
+  ngOnInit() {
+    this.carregarCampeonatos();
+  }
+
+  carregarCampeonatos() {
+    this.campeonatoService.getCampeonatos().subscribe(data => {
+      this.campeonatos = data.content || [];
+    });
+  }
+
   exibirFormularioCadastro() {
     this.mostrarFormularioCadastro = true;
   }
+
   fecharFormularioCadastro() {
     this.mostrarFormularioCadastro = false;
   }
+
   cadastrarCampeonato() {
-<<<<<<< HEAD
     // Validação básica
     if (!this.novoCampeonato.startDate || !this.novoCampeonato.endDate) {
       alert('Preencha as datas corretamente!');
       return;
     }
-
-    if (new Date(this.novoCampeonato.endDate) < new Date(this.novoCampeonato.startDate)) {
+  
+    // Conversão das datas para formato ISO (YYYY-MM-DD)
+    const startDate = new Date(this.novoCampeonato.startDate);
+    const endDate = new Date(this.novoCampeonato.endDate);
+  
+    if (endDate < startDate) {
       alert('A data de término deve ser posterior à data de início!');
       return;
     }
-
+  
     const payload = {
-      ...this.novoCampeonato,
-      startDate: this.novoCampeonato.startDate,
-      endDate: this.novoCampeonato.endDate,
-      season: Number(this.novoCampeonato.season)
+      name: this.novoCampeonato.name,
+      startDate: startDate.toISOString().split('T')[0], // Formatação para yyyy-MM-dd
+      endDate: endDate.toISOString().split('T')[0], // Formatação para yyyy-MM-dd
+      season: this.novoCampeonato.season.trim(), // Garantir que a temporada seja uma string
+      status: "DRAFT", // Ajuste o status conforme o que o backend espera
+      teamIds: [] // Enviar um array vazio se não houver times
     };
-
+  
     console.log('Enviando campeonato:', payload);
-
+  
     this.campeonatoService.addCampeonato(payload).subscribe(
       (response) => {
         console.log('Cadastro realizado com sucesso:', response);
@@ -89,7 +95,7 @@ export class CampeonatoComponent implements OnInit {
           startDate: '', 
           endDate: '', 
           season: '',
-          status: 'ACTIVE' // Mantém o padrão como "Em andamento"
+          status: 'ACTIVE' // Status padrão mantido
         };
         this.mostrarFormularioCadastro = false;
       },
@@ -99,28 +105,29 @@ export class CampeonatoComponent implements OnInit {
       }
     );
   }
-=======
-    if (this.novoCampeonato.nome && this.novoCampeonato.dataInicio && this.novoCampeonato.dataTermino && this.novoCampeonato.local) {
-        const data = `${this.novoCampeonato.dataInicio} - ${this.novoCampeonato.dataTermino}`;
-        this.campeonatos.push({
-            nome: this.novoCampeonato.nome,
-            status: 'Não Iniciado',
-            local: this.novoCampeonato.local,
-            data: data,
-            timesVisiveis: false,
-            times: []
-        });
+  
+  // Funções adicionais para o controle de inscrição de times e manipulação de campeonatos
 
-        this.novoCampeonato = { nome: '', dataInicio: '', dataTermino: '', local: '' };
-        this.mostrarFormularioCadastro = false;
-        this.mostrarNotificacao('Cadastro realizado com sucesso!', 'sucesso');
-    } else {
-        this.mostrarNotificacao('Por favor, preencha todos os campos.', 'erro');
-    }
+  mostrarNotificacao(mensagem: string, tipo: 'sucesso' | 'erro') {
+    this.notificacao = {
+        mensagem,
+        tipo,
+        mostrar: true
+    };
+    setTimeout(() => {
+        this.fecharNotificacao();
+    }, 3000);
   }
+
+  fecharNotificacao() {
+    this.notificacao.mostrar = false;
+  }
+
+  // Adicionar times, editar e remover
   toggleTimes(index: number) {
     this.campeonatos[index].timesVisiveis = !this.campeonatos[index].timesVisiveis;
   }
+
   excluirTime(campeonato: any, time: any) {
     const index = campeonato.times.indexOf(time);
     if (index !== -1) {
@@ -128,6 +135,7 @@ export class CampeonatoComponent implements OnInit {
         this.mostrarNotificacao('Time removido com sucesso!', 'sucesso');
     }
   }
+
   confirmarExclusao(campeonato: any, time: any) {
     const confirmacao = window.confirm(
         `Ao remover a inscrição do time ${time.nome}, será necessário realizá-la novamente para participar do campeonato. Deseja remover mesmo assim?`
@@ -137,11 +145,13 @@ export class CampeonatoComponent implements OnInit {
         this.excluirTime(campeonato, time);
     }
   }
+
   exibirFormularioInscricao() {
     this.mostrarFormularioInscricao = true;
     this.campeonatoSelecionado = null;
     this.novoNomeTime = '';
   }
+
   selecionarCampeonato() {
     if (this.campeonatoSelecionado) {
       this.mostrarFormularioInscricao = false;
@@ -150,6 +160,7 @@ export class CampeonatoComponent implements OnInit {
       alert('Por favor, selecione um campeonato.');
     }
   }
+
   selecionarTime() {
     if (this.campeonatoSelecionado && this.novoNomeTime.trim()) {
         const novoTime = {
@@ -161,19 +172,18 @@ export class CampeonatoComponent implements OnInit {
     } else {
         this.mostrarNotificacao('Por favor, preencha todos os campos.', 'erro');
     }
-}
+  }
 
   fecharFormularioInscricao() {
     this.mostrarFormularioInscricao = false;
     this.campeonatoSelecionado = null;
     this.novoNomeTime = '';
   }
-  onCampeonatoChange() {
-    this.timeSelecionado = null;
-  }
+
   atualizarStatus(campeonato: any, novoStatus: string) {
     campeonato.status = novoStatus;
   }
+
   abrirModalEditarTime(campeonato: any) {
     this.campeonatoEmEdicao = campeonato;
     this.mostrarModalEditarTime = true;
@@ -187,6 +197,7 @@ export class CampeonatoComponent implements OnInit {
     this.timeSelecionadoParaEdicao = null;
     this.novoNomeTime = '';
   }
+
   salvarEdicaoTime() {
     if (this.timeSelecionadoParaEdicao && this.novoNomeTime.trim()) {
         this.timeSelecionadoParaEdicao.nome = this.novoNomeTime.trim();
@@ -196,16 +207,19 @@ export class CampeonatoComponent implements OnInit {
         this.mostrarNotificacao('Por favor, preencha todos os campos.', 'erro');
     }
   }
+
   abrirModalRemoverTime(campeonato: any) {
     this.campeonatoEmEdicao = campeonato;
     this.mostrarModalRemoverTime = true;
     this.timeSelecionadoParaRemocao = null;
   }
+
   fecharModalRemoverTime() {
     this.mostrarModalRemoverTime = false;
     this.campeonatoEmEdicao = null;
     this.timeSelecionadoParaRemocao = null;
   }
+
   confirmarRemocaoTime() {
     if (this.timeSelecionadoParaRemocao) {
         const confirmacao = window.confirm(
@@ -224,19 +238,4 @@ export class CampeonatoComponent implements OnInit {
         this.mostrarNotificacao('Por favor, selecione um time para remover.', 'erro');
     }
   }
-  mostrarNotificacao(mensagem: string, tipo: 'sucesso' | 'erro') {
-    this.notificacao = {
-        mensagem,
-        tipo,
-        mostrar: true
-    };
-    setTimeout(() => {
-        this.fecharNotificacao();
-    }, 3000);
-  }
-
-  fecharNotificacao() {
-    this.notificacao.mostrar = false;
-  }
->>>>>>> 72dbae68dc6d8eacd7e195a4c92b5bff037fad3f
 }
