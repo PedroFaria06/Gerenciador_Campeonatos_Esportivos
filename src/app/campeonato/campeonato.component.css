@@ -1,30 +1,6 @@
 .dashboard-container {
   display: flex;
 }
-.sidebar {
-  width: 250px;
-  background-color: #007bff;
-  color: white;
-  height: 100vh;
-  padding: 20px;
-}
-
-.sidebar .logo {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
-}
-
-.sidebar .menu li {
-  list-style: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.sidebar .menu .active {
-  background: #0056b3;
-  border-radius: 5px;
-}
 
 .content {
   flex-grow: 1;
@@ -61,22 +37,25 @@ h1 {
 }
 
 .status {
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  text-transform: capitalize;
+}
+
+.status.não-iniciado {
+  background-color: #f0ad4e;
   color: white;
 }
 
 .status.em-andamento {
-  background: #007bff;
-}
-
-.status.nao-iniciado {
-  background: #dc3545;
+  background-color: #5bc0de;
+  color: white;
 }
 
 .status.concluido {
-  background: #28a745;
+  background-color: #5cb85c;
+  color: white;
 }
 
 .info {
@@ -122,14 +101,6 @@ h1 {
 .time-nome {
   font-size: 14px;
   font-weight: bold;
-}
-
-.campeonato-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  justify-content: center;
-  align-items: center;
 }
 
 .btn-cadastrar,
@@ -289,8 +260,6 @@ button:hover {
 button[type="button"]:hover {
   opacity: 0.7;
 }
-<<<<<<< HEAD
-=======
 .inscricao-container {
   position: fixed;
   top: 0;
@@ -335,68 +304,46 @@ button[type="button"]:hover {
 .form-group label {
   font-weight: bold;
 }
+
 .form-group select {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
 }
+
 .button-group {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
 }
+
 .button-group button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
+
 .button-group button[type="submit"] {
   background-color: #4CAF50;
   color: white;
 }
+
 .button-group button[type="submit"]:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
+
 .button-group button[type="button"] {
   background-color: #f44336;
   color: white;
 }
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+
 .dropdown-submenu {
   position: relative;
 }
+
 .dropdown-submenu-content {
   display: none;
   position: absolute;
@@ -406,18 +353,22 @@ button[type="button"]:hover {
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
+
 .dropdown-submenu:hover .dropdown-submenu-content {
   display: block;
 }
+
 .dropdown-content a, .dropdown-submenu-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
+
 .dropdown-content a:hover, .dropdown-submenu-content a:hover {
   background-color: #f1f1f1;
 }
+
 .notificacao {
   position: fixed;
   top: 20px;
@@ -428,17 +379,21 @@ button[type="button"]:hover {
   z-index: 1000;
   animation: slideIn 0.5s ease-in-out;
 }
+
 .notificacao-conteudo {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .notificacao.sucesso {
   background-color: #4CAF50;
 }
+
 .notificacao.erro {
   background-color: #f44336;
 }
+
 .fechar-notificacao {
   background: none;
   border: none;
@@ -447,9 +402,11 @@ button[type="button"]:hover {
   cursor: pointer;
   padding: 0 5px;
 }
+
 .fechar-notificacao:hover {
   opacity: 0.8;
 }
+
 @keyframes slideIn {
   from {
       transform: translateX(100%);
@@ -460,4 +417,3 @@ button[type="button"]:hover {
       opacity: 1;
   }
 }
->>>>>>> 72dbae68dc6d8eacd7e195a4c92b5bff037fad3f

@@ -124,13 +124,17 @@ export class CampeonatoComponent implements OnInit {
   excluirTime(campeonato: any, time: any) {
     const index = campeonato.times.indexOf(time);
     if (index !== -1) {
-      campeonato.times.splice(index, 1);
+        campeonato.times.splice(index, 1);
+        this.mostrarNotificacao('Time removido com sucesso!', 'sucesso');
     }
   }
   confirmarExclusao(campeonato: any, time: any) {
-    const confirmacao = window.confirm(`Tem certeza que deseja excluir o time ${time.nome}?`);
+    const confirmacao = window.confirm(
+        `Ao remover a inscrição do time ${time.nome}, será necessário realizá-la novamente para participar do campeonato. Deseja remover mesmo assim?`
+    );
+    
     if (confirmacao) {
-      this.excluirTime(campeonato, time);
+        this.excluirTime(campeonato, time);
     }
   }
   exibirFormularioInscricao() {
