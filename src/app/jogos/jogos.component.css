@@ -89,3 +89,144 @@ h1 {
 .toggle-icon {
   font-size: 16px;
 }
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.btn-criar-partida {
+  background-color: #1F82BF;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn-criar-partida:hover {
+  background-color: #166EA3;
+}
+
+/* Estilos do Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button-group button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.button-group button[type="submit"] {
+  background-color: #1F82BF;
+  color: white;
+}
+
+.button-group button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+.button-group button:hover {
+  opacity: 0.9;
+}
+
+/* Status das partidas */
+.match-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.match-status.scheduled {
+  background-color: #ffd700;
+  color: #856404;
+}
+
+.match-status.in_progress {
+  background-color: #007bff;
+  color: white;
+}
+
+.match-status.finished {
+  background-color: #28a745;
+  color: white;
+}
+
+.match-status.cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-edit {
+  background-color: #1F82BF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-edit:hover {
+  background-color: #166EA3;
+}
