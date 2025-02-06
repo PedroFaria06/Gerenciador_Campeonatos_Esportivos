@@ -2,41 +2,46 @@
   <div class="content">
     <h1>Súmula</h1>
 
+    <div *ngIf="loading" class="loading">Carregando...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
     <div class="dropdown-container">
-      <select id="select-campeonato" [(ngModel)]="selectedCampeonato">
+      <select 
+        id="select-campeonato" 
+        [(ngModel)]="selectedCampeonato"
+        (ngModelChange)="onChampionshipSelect()"
+      >
         <option value="" disabled selected>Selecione um Campeonato</option>
         <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">
-          {{ campeonato.nome }}
+          {{ campeonato.name }}
         </option>
       </select>
 
-      <select id="select-etapa" [(ngModel)]="selectedEtapa" [disabled]="!selectedCampeonato">
-        <option value="" disabled selected>Selecione uma Etapa</option>
-        <option *ngFor="let etapa of etapas" [value]="etapa.id">
-          {{ etapa.nome }}
-        </option>
-      </select>
-
-      <select id="select-jogo" [(ngModel)]="selectedJogo" [disabled]="!selectedEtapa">
-        <option value="" disabled selected>Selecione um Jogo</option>
-        <option *ngFor="let jogo of jogos" [value]="jogo.id">
-          {{ jogo.nome }}
+      <select 
+        id="select-match" 
+        [(ngModel)]="selectedMatch"
+        (ngModelChange)="onMatchSelect()"
+        [disabled]="!selectedCampeonato"
+      >
+        <option value="" disabled selected>Selecione uma Partida</option>
+        <option *ngFor="let match of matches" [value]="match.id">
+          {{ getTeamName(match.homeTeamId) }} x {{ getTeamName(match.awayTeamId) }}
         </option>
       </select>
     </div>
 
-    <div *ngIf="!selectedJogo" class="mensagem-selecao">
-      <p>Selecione um campeonato, uma etapa e um jogo para visualizar a súmula!</p>
+    <div *ngIf="!selectedMatch" class="mensagem-selecao">
+      <p>Selecione um campeonato e uma partida para visualizar a súmula!</p>
     </div>
 
-    <div *ngIf="selectedJogo" class="sumula-container">
+    <div *ngIf="matchDetails" class="sumula-container">
       <div class="dados-partida">
         <h3>Dados da Partida</h3>
-        <p><strong>📅 Data:</strong> 10/11/2024</p>
-        <p><strong>📍 Local:</strong> Arena ABC</p>
-        <p><strong>⏰ Horário:</strong> 17:00</p>
-        <p><strong>🆚 Times:</strong> Time 1 x Time 2</p>
-        <p><strong>⚖️ Árbitro:</strong> João</p>
+        <p><strong>📅 Data:</strong> {{ matchDetails.matchDate | date:'dd/MM/yyyy' }}</p>
+        <p><strong>📍 Local:</strong> {{ matchDetails.location }}</p>
+        <p><strong>⏰ Horário:</strong> {{ matchDetails.matchDate | date:'HH:mm' }}</p>
+        <p><strong>🆚 Times:</strong> {{ matchDetails.homeTeam.name }} x {{ matchDetails.awayTeam.name }}</p>
+        <p><strong>⚖️ Árbitro:</strong> {{ matchDetails.referee || 'Não definido' }}</p>
       </div>
 
       <div class="eventos-partida">
@@ -49,46 +54,46 @@
             <th>Tempo</th>
             <th>Observações</th>
           </tr>
-          <tr *ngFor="let evento of eventos">
-            <td>{{ evento.tipo }}</td>
-            <td>{{ evento.jogador }}</td>
-            <td>{{ evento.numero }}</td>
-            <td>{{ evento.tempo }}'</td>
-            <td>{{ evento.observacao }}</td>
+          <tr *ngFor="let event of matchDetails.events">
+            <td>{{ getEventTypeDescription(event.eventType) }}</td>
+            <td>{{ getPlayerName(event.playerId) }}</td>
+            <td>{{ getPlayerNumber(event.playerId) }}</td>
+            <td>{{ event.minute }}'</td>
+            <td>{{ event.observation || '-' }}</td>
           </tr>
         </table>
       </div>
 
       <div class="lista-jogadores">
-        <h3>Lista de Jogadores que iniciaram a partida</h3>
+        <h3>Lista de Jogadores que iniciaram a partida</h3>    
         <div class="time">
-          <h4>Time 1 - Técnico: Pedro</h4>
+          <h4>{{ matchDetails.homeTeam.name }} - Técnico: {{ matchDetails.homeTeam.coach }}</h4>
           <table>
             <tr>
               <th>Nº</th>
               <th>Nome</th>
               <th>Posição</th>
             </tr>
-            <tr *ngFor="let jogador of time1">
-              <td>{{ jogador.numero }}</td>
-              <td>{{ jogador.nome }}</td>
-              <td>{{ jogador.posicao }}</td>
+            <tr *ngFor="let player of getStarterPlayers(matchDetails.homeTeam.players)">
+              <td>{{ player.shirtNumber }}</td>
+              <td>{{ player.playerName }}</td>
+              <td>{{ player.position }}</td>
             </tr>
           </table>
         </div>
 
         <div class="time">
-          <h4>Time 2 - Técnico: João</h4>
+          <h4>{{ matchDetails.awayTeam.name }} - Técnico: {{ matchDetails.awayTeam.coach }}</h4>
           <table>
             <tr>
               <th>Nº</th>
               <th>Nome</th>
               <th>Posição</th>
             </tr>
-            <tr *ngFor="let jogador of time2">
-              <td>{{ jogador.numero }}</td>
-              <td>{{ jogador.nome }}</td>
-              <td>{{ jogador.posicao }}</td>
+            <tr *ngFor="let player of getStarterPlayers(matchDetails.awayTeam.players)">
+              <td>{{ player.shirtNumber }}</td>
+              <td>{{ player.playerName }}</td>
+              <td>{{ player.position }}</td>
             </tr>
           </table>
         </div>
