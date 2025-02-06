@@ -4,23 +4,34 @@
   <!-- Seleção de Campeonato -->
   <div class="select-campeonato">
     <label for="select-campeonato">Selecione um Campeonato:</label>
-    <select id="select-campeonato" [(ngModel)]="selectedCampeonato">
+    <select id="select-campeonato" [(ngModel)]="selectedCampeonato" (ngModelChange)="onChampionshipSelect()">
       <option value="" disabled selected>Selecione um Campeonato</option>
       <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">
-        {{ campeonato.nome }}
+        {{ campeonato.name }}
       </option>
     </select>
   </div>
 
-  <!-- Exibição de Jogos -->
-  <div *ngIf="selectedCampeonato">
+  <div class="actions" *ngIf="selectedCampeonato">
+    <button class="btn-criar-partida" (click)="openCreateMatchModal()">Criar Partida</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Carregando...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="selectedCampeonato && !loading && !error">
     <div class="fase-container" *ngFor="let fase of fases">
       <div class="fase-header">
         <span class="fase-nome">{{ fase.nome }}</span>
         <span class="status {{ fase.status | lowercase }}">{{ fase.status }}</span>
       </div>
 
-      <div class="fase-grupos" *ngFor="let grupo of fase.grupos">
+      <div class="fase-grupos" *ngFor="let grupo of fase.groups">
         <div class="grupo-header" (click)="toggleGrupo(grupo)">
           <span class="grupo-nome">{{ grupo.nome }}</span>
           <span class="status {{ grupo.status | lowercase }}">{{ grupo.status }}</span>
@@ -33,21 +44,139 @@
               <tr>
                 <th>Confronto</th>
                 <th>Data</th>
-                <th>Local</th>
-                <th>Horário</th>
+                <th>Placar</th>
+                <th>Status</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let jogo of grupo.jogos">
-                <td>{{ jogo.time1 }} x {{ jogo.time2 }}</td>
-                <td>{{ jogo.data }}</td>
-                <td>{{ jogo.local }}</td>
-                <td>{{ jogo.horario }}</td>
+              <tr *ngFor="let match of grupo.matches">
+                <td>{{ getTeamName(match.homeTeamId) }} x {{ getTeamName(match.awayTeamId) }}</td>
+                <td>{{ match.matchDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <ng-container *ngIf="match.status === 'FINISHED' || match.status === 'IN_PROGRESS'">
+                    {{ match.homeTeamGoals || 0 }} x {{ match.awayTeamGoals || 0 }}
+                  </ng-container>
+                  <ng-container *ngIf="match.status === 'SCHEDULED'">
+                    - x -
+                  </ng-container>
+                </td>
+                <td>
+                  <span class="match-status {{ match.status | lowercase }}">
+                    {{ getStatusDescription(match.status) }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-edit" (click)="openEditMatchModal(match)">Editar</button>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)" class="page-btn">
+        Anterior
+      </button>
+      <span class="page-info">
+        Página {{ currentPage + 1 }} de {{ totalPages }}
+      </span>
+      <button [disabled]="currentPage === totalPages - 1" (click)="onPageChange(currentPage + 1)" class="page-btn">
+        Próximo
+      </button>
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="showCreateMatchModal">
+    <div class="modal-content">
+      <h2>Criar Nova Partida</h2>
+      <form (ngSubmit)="createMatch()">
+        <div class="form-group">
+          <label>Time Casa:</label>
+          <select [(ngModel)]="newMatch.homeTeamId" name="homeTeam" required>
+            <option [ngValue]="undefined">Selecione o time da casa</option>
+            <option *ngFor="let team of availableTeams" [ngValue]="team.id">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Time Visitante:</label>
+          <select [(ngModel)]="newMatch.awayTeamId" name="awayTeam" required>
+            <option [ngValue]="undefined">Selecione o time visitante</option>
+            <option *ngFor="let team of availableTeams" [ngValue]="team.id">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Data e Hora:</label>
+          <input type="datetime-local" [(ngModel)]="newMatch.matchDate" name="matchDate" required>
+        </div>
+
+        <div class="form-group">
+          <label>Rodada:</label>
+          <input type="number" [(ngModel)]="newMatch.round" name="round" required min="1">
+        </div>
+
+        <div class="button-group">
+          <button type="submit">Criar</button>
+          <button type="button" (click)="closeCreateMatchModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="showEditMatchModal">
+    <div class="modal-content">
+      <h2>Atualizar Partida</h2>
+      <form (ngSubmit)="updateMatch()">
+        <div class="form-group">
+          <p class="match-teams">
+            {{ getTeamName(selectedMatch.homeTeamId) }} x {{ getTeamName(selectedMatch.awayTeamId) }}
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Status:</label>
+          <select [(ngModel)]="selectedMatch.status" name="status" required>
+            <option *ngFor="let status of statusOptions" [value]="status.codigo">
+              {{ status.descricao }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group score-group">
+          <div>
+            <label>Gols Casa:</label>
+            <input type="number" [(ngModel)]="selectedMatch.homeTeamGoals" name="homeGoals" min="0">
+          </div>
+          <div>
+            <label>Gols Visitante:</label>
+            <input type="number" [(ngModel)]="selectedMatch.awayTeamGoals" name="awayGoals" min="0">
+          </div>
+        </div>
+
+        <div class="events-list" *ngIf="matchEvents.length > 0">
+          <h3>Eventos da Partida</h3>
+          <ul>
+            <li *ngFor="let event of matchEvents">
+              {{ event.minute }}' - {{ getEventTypeDescription(event.eventType) }} - 
+              {{ getPlayerName(event.playerId) }}
+              <button class="btn-remove" (click)="removeEvent(event.id)">×</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="button-group">
+          <button type="submit">Salvar</button>
+          <button type="button" (click)="closeEditMatchModal()">Cancelar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
