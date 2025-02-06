@@ -1,44 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChampionshipService } from '../services/championship.service';
+import { Championship } from '../models/championship.interface';
+import { ChampionshipTeamDTO } from '../models/championship-team.interface';
 
 @Component({
   selector: 'app-classificacao',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './classificacao.component.html',
-  styleUrls: ['./classificacao.component.css']
+  styleUrls: ['./classificacao.component.css'],
 })
-export class ClassificacaoComponent {
-  formVisible = false;
-  selectedCampeonato: any;
+export class ClassificacaoComponent implements OnInit {
+  campeonatos: Championship[] = [];
+  selectedCampeonato: Championship | null = null;
+  classification: ChampionshipTeamDTO[] = [];
+  loading = false;
+  error = '';
 
-  campeonatos = [
-    { id: 0, nome: 'Todos' },
-    { id: 1, nome: 'Campeonato Brasileiro' },
-    { id: 2, nome: 'Campeonato Paulista' },
-    { id: 3, nome: 'Campeonato Carioca' }
-  ];
+  constructor(private championshipService: ChampionshipService) {}
 
-  rankingTimes = [
-    { posicao: 1, time: 'Time A', pontos: 45, percentual: '75%', jogos: 20, vitorias: 14, empates: 3, derrotas: 3, gp: 36, gc: 15, sg: 21 },
-    { posicao: 2, time: 'Time B', pontos: 42, percentual: '70%', jogos: 20, vitorias: 13, empates: 3, derrotas: 4, gp: 34, gc: 18, sg: 16 },
-    { posicao: 3, time: 'Time C', pontos: 39, percentual: '65%', jogos: 20, vitorias: 12, empates: 3, derrotas: 5, gp: 32, gc: 20, sg: 12 }
-  ];
+  ngOnInit() {
+    this.loadChampionships();
+  }
 
-  rankingArtilheiros = [
-    { posicao: 1, jogador: 'Jogador A', jogos: 20, media: 1.2, gols: 24 },
-    { posicao: 2, jogador: 'Jogador B', jogos: 19, media: 1.1, gols: 21 },
-    { posicao: 3, jogador: 'Jogador C', jogos: 18, media: 1.0, gols: 18 }
-  ];
-
-  rankingGoleiros = [
-    { posicao: 1, jogador: 'Goleiro A', jogos: 20, gols_sofridos: 16 },
-    { posicao: 2, jogador: 'Goleiro B', jogos: 19, gols_sofridos: 17 },
-    { posicao: 3, jogador: 'Goleiro C', jogos: 18, gols_sofridos: 18 }
-  ];
-
-  toggleForm() {
-    this.formVisible = !this.formVisible;
+  loadChampionships() {
+    this.loading = true;
+    this.championshipService.getChampionships().subscribe({
+      next: (response) => {
+        this.campeonatos = response.content;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar campeonatos:', error);
+        this.error = 'Erro ao carregar campeonatos';
+        this.loading = false;
+      },
+    });
   }
 
   onCampeonatoChange(event: Event) {
@@ -46,9 +44,36 @@ export class ClassificacaoComponent {
     const selectedValue = selectElement.value;
 
     if (selectedValue) {
-      this.selectedCampeonato = this.campeonatos.find(c => c.id === +selectedValue);
+      this.selectedCampeonato =
+        this.campeonatos.find((c) => c.id === +selectedValue) || null;
+      if (this.selectedCampeonato) {
+        this.loadClassification(this.selectedCampeonato.id!);
+      }
     } else {
       this.selectedCampeonato = null;
+      this.classification = [];
     }
+  }
+
+  loadClassification(championshipId: number) {
+    this.loading = true;
+    this.championshipService
+      .getChampionshipStandings(championshipId)
+      .subscribe({
+        next: (standings) => {
+          this.classification = standings;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar classificação:', error);
+          this.error = 'Erro ao carregar classificação';
+          this.loading = false;
+        },
+      });
+  }
+
+  calculatePercentage(points: number, matches: number): string {
+    if (matches === 0) return '0%';
+    return ((points / (matches * 3)) * 100).toFixed(1) + '%';
   }
 }
