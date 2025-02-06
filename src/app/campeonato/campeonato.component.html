@@ -1,70 +1,123 @@
 <div class="dashboard-container">
-    <div class="content">
-      <h1>Campeonatos</h1>
+  <div class="content">
+    <h1>Campeonatos</h1>
+    <div class="actions-container">
       <button class="btn-cadastrar" (click)="exibirFormularioCadastro()">Cadastrar Campeonato</button>
-  
-      <div *ngIf="campeonatos.length > 0; else semCampeonatos">
-        <div *ngFor="let campeonato of campeonatos" class="campeonato-card">
-          <div class="campeonato-header">
-            <span class="campeonato-nome">{{ campeonato.name }}</span>
-            <span class="status">{{ campeonato.status }}</span>
-          </div>
-          <div class="info">
-            <span>📅 {{ campeonato.startDate | date: 'dd/MM/yyyy' }} - {{ campeonato.endDate | date: 'dd/MM/yyyy' }}</span>
-            <span>🏆 Temporada: {{ campeonato.season }}</span>
-          </div>
-        </div>
-      </div> 
-  
-      <ng-template #semCampeonatos>
-        <p class="mensagem">Nenhum campeonato cadastrado.</p>
-      </ng-template>
     </div>
-  
-    <div class="modal" *ngIf="mostrarFormularioCadastro">
-      <div class="modal-content">
-        <h2>Cadastro de Campeonato</h2>
-        <form (ngSubmit)="cadastrarCampeonato()">
-          <label for="name">Nome do Campeonato:</label>
-          <input 
-            id="name" 
-            [(ngModel)]="novoCampeonato.name" 
-            name="name" 
-            required 
-          />
-  
-          <label for="startDate">Data de Início:</label>
-          <input 
-            id="startDate" 
-            type="date" 
-            [(ngModel)]="novoCampeonato.startDate" 
-            name="startDate" 
-            required 
-          />
-  
-          <label for="endDate">Data de Término:</label>
-          <input 
-            id="endDate" 
-            type="date" 
-            [(ngModel)]="novoCampeonato.endDate" 
-            name="endDate" 
-            required 
-          />
-  
-          <label for="season">Temporada:</label>
-          <input 
-            id="season" 
-            [(ngModel)]="novoCampeonato.season" 
-            name="season" 
-            required 
-          />
-  
-          <div class="botoes">
-            <button type="submit">Cadastrar</button>
-            <button type="button" (click)="fecharFormularioCadastro()">Cancelar</button>
-          </div>
-        </form>
+
+    <div *ngIf="campeonatos.length > 0; else semCampeonatos">
+      <div *ngFor="let campeonato of campeonatos" class="campeonato-card">
+        <div class="campeonato-header">
+          <span class="campeonato-nome">{{ campeonato.name }}</span>
+          <span class="status" [ngClass]="getStatusClass(campeonato.status)">
+            {{ getStatusDescription(campeonato.status) }}
+          </span>
+        </div>
+        <div class="info">
+          <span>📅 {{ campeonato.startDate | date: 'dd/MM/yyyy' }} - {{ campeonato.endDate | date: 'dd/MM/yyyy' }}</span>
+          <span>🏆 Temporada: {{ campeonato.season }}</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn-action" (click)="abrirModalTimes(campeonato)">Gerenciar Times</button>
+          <button class="btn-action" (click)="confirmarExclusao(campeonato)">Excluir</button>
+        </div>
+      </div>
+
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button 
+          [disabled]="currentPage === 0"
+          (click)="onPageChange(currentPage - 1)"
+          class="btn-page">
+          Anterior
+        </button>
+        <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        <button 
+          [disabled]="currentPage === totalPages - 1"
+          (click)="onPageChange(currentPage + 1)"
+          class="btn-page">
+          Próximo
+        </button>
+      </div>
+    </div>
+
+    <ng-template #semCampeonatos>
+      <p class="mensagem">Nenhum campeonato cadastrado.</p>
+    </ng-template>
+  </div>
+
+  <!-- Modal Cadastro Campeonato -->
+  <div class="modal" *ngIf="mostrarFormularioCadastro">
+    <div class="modal-content">
+      <h2>Cadastro de Campeonato</h2>
+      <form (ngSubmit)="cadastrarCampeonato()">
+        <label for="name">Nome do Campeonato:</label>
+        <input 
+          id="name" 
+          [(ngModel)]="novoCampeonato.name" 
+          name="name" 
+          required 
+        />
+
+        <label for="startDate">Data de Início:</label>
+        <input 
+          id="startDate" 
+          type="date" 
+          [(ngModel)]="novoCampeonato.startDate" 
+          name="startDate" 
+          required 
+        />
+
+        <label for="endDate">Data de Término:</label>
+        <input 
+          id="endDate" 
+          type="date" 
+          [(ngModel)]="novoCampeonato.endDate" 
+          name="endDate" 
+          required 
+        />
+
+        <label for="season">Temporada:</label>
+        <input 
+          id="season" 
+          [(ngModel)]="novoCampeonato.season" 
+          name="season" 
+          required 
+        />
+
+        <div class="botoes">
+          <button type="submit">Cadastrar</button>
+          <button type="button" (click)="fecharFormularioCadastro()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="mostrarFormularioTimes">
+    <div class="modal-content">
+      <h2>Gerenciar Times do Campeonato</h2>
+      <div class="times-disponiveis">
+        <div *ngFor="let time of timesDisponiveis" class="time-item">
+          <label>
+            <input type="checkbox" 
+                   [checked]="timesSelecionados.includes(time.id!)"
+                   (change)="toggleTime(time.id!)">
+            {{ time.name }}
+          </label>
+        </div>
+      </div>
+      <div class="botoes">
+        <button (click)="salvarTimes()">Salvar</button>
+        <button type="button" (click)="fecharModalTimes()">Cancelar</button>
       </div>
     </div>
   </div>
-  
+
+  <div *ngIf="notificacao.mostrar" 
+       class="notificacao" 
+       [ngClass]="notificacao.tipo">
+    <div class="notificacao-conteudo">
+      {{ notificacao.mensagem }}
+      <button class="fechar-notificacao" (click)="fecharNotificacao()">×</button>
+    </div>
+  </div>
+</div>
