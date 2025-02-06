@@ -1,47 +1,119 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { forkJoin, Observable } from 'rxjs';
+import { RelatorioService } from '../services/relatorio.service';
+import { Championship } from '../models/championship.interface';
+import { Match } from '../models/match.interface';
+import { ChampionshipTeamDTO } from '../models/championship-team.interface';
+import { MatchEvent } from '../models/match-event.interface';
+import { PageResponse } from '../models/page-response.interface';
 
 @Component({
   selector: 'app-relatorio',
-  standalone: true, 
-  imports: [CommonModule], 
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './relatorio.component.html',
-  styleUrls: ['./relatorio.component.css']
+  styleUrls: ['./relatorio.component.css'],
 })
-export class RelatorioComponent {
+export class RelatorioComponent implements OnInit {
   formVisible = false;
   isModalVisible = false;
+  loading = false;
 
-  campeonatos = [
-    { id: 0, nome: 'Todos' },
-    { id: 1, nome: 'Campeonato Brasileiro' },
-    { id: 2, nome: 'Campeonato Paulista' },
-    { id: 3, nome: 'Campeonato Carioca' }
-  ];
+  selectedChampionship: number | undefined;
+  selectedMatch: number | undefined;
+  showSumula = false;
+  showClassificacao = false;
 
-  etapas = [
-    { id: 0, nome: 'Todos' },
-    { id: 1, nome: 'Primeira Fase' },
-    { id: 2, nome: 'Segunda Fase' },
-    { id: 3, nome: 'Final' }
-  ];
+  campeonatos: Championship[] = [];
+  matches: Match[] = [];
+  standings: ChampionshipTeamDTO[] = [];
+  matchEvents: MatchEvent[] = [];
 
-  jogos = [
-    { id: 0, nome: 'Todos' },
-    { id: 1, nome: 'Jogo 1' },
-    { id: 2, nome: 'Jogo 2' },
-    { id: 3, nome: 'Jogo 3' }
-  ];
+  constructor(private relatorioService: RelatorioService) {}
 
-  toggleForm() {
+  ngOnInit(): void {
+    this.loadChampionships();
+  }
+
+  loadChampionships(): void {
+    this.loading = true;
+    this.relatorioService.getChampionships().subscribe({
+      next: (response: PageResponse<Championship>) => {
+        this.campeonatos = response.content;
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar campeonatos:', error);
+        this.loading = false;
+      },
+    });
+  }
+
+  onChampionshipSelect(championshipId: number): void {
+    if (!championshipId) return;
+
+    this.loading = true;
+    this.relatorioService.getMatchesByChampionship(championshipId).subscribe({
+      next: (response: PageResponse<Match>) => {
+        this.matches = response.content;
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar partidas:', error);
+        this.loading = false;
+      },
+    });
+  }
+
+  generateReport(): void {
+    if (!this.selectedChampionship) return;
+
+    const requests: Observable<any>[] = [];
+
+    if (this.showClassificacao) {
+      requests.push(
+        this.relatorioService.getStandings(this.selectedChampionship)
+      );
+    }
+
+    if (this.showSumula && this.selectedMatch) {
+      requests.push(this.relatorioService.getMatchEvents(this.selectedMatch));
+    }
+
+    if (requests.length > 0) {
+      this.loading = true;
+      forkJoin(requests).subscribe({
+        next: (results: any[]) => {
+          if (this.showClassificacao) {
+            this.standings = results[0];
+          }
+          if (this.showSumula && this.selectedMatch) {
+            this.matchEvents = results[1].content;
+          }
+          this.loading = false;
+          this.openModal();
+        },
+        error: (error: any) => {
+          console.error('Erro ao gerar relatório:', error);
+          this.loading = false;
+        },
+      });
+    } else {
+      this.openModal();
+    }
+  }
+
+  toggleForm(): void {
     this.formVisible = !this.formVisible;
   }
 
-  openModal() {
+  openModal(): void {
     this.isModalVisible = true;
   }
 
-  closeModal() {
+  closeModal(): void {
     this.isModalVisible = false;
   }
 }
