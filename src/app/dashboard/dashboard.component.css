@@ -192,21 +192,33 @@ table tbody tr:hover {
   position: relative;
 }
 
-/* Tooltip nos Jogos do Calendário */
-.game-day:hover::after {
-  content: "Jogo: TIME 1 x TIME 2";
+.game-day[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
   position: absolute;
   background: #000;
   color: white;
-  padding: 5px;
+  padding: 5px 10px;
   border-radius: 5px;
   font-size: 12px;
   top: -30px;
   left: 50%;
   transform: translateX(-50%);
-  white-space: nowrap;
+  white-space: pre;
+  z-index: 1000;
+  min-width: 150px;
 }
 
+/* Adicione uma seta ao tooltip */
+.game-day[data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000 transparent transparent transparent;
+}
 /* Responsividade */
 @media screen and (max-width: 1024px) {
   .grid-container {
