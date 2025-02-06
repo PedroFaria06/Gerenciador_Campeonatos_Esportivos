@@ -1,77 +1,169 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TeamService } from '../services/team.service';
+import { PlayerService } from '../services/player.service';
+import { Team } from '../models/team.interface';
+import { Player } from '../models/player.interface';
+import { TeamForm } from '../models/team-form.interface';
 
 @Component({
   selector: 'app-teams-and-athletes',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './teams-and-athletes.component.html',
-  styleUrl: './teams-and-athletes.component.css'
+  styleUrl: './teams-and-athletes.component.css',
 })
-export class TeamsAndAthletesComponent {
+export class TeamsAndAthletesComponent implements OnInit {
   isModalOpen = false;
   modalTitle = '';
   isRemoveModalOpen = false;
-  teamToRemove: any = null;
+  teamToRemove: Team | null = null;
+  teams: Team[] = [];
+  athletes: Player[] = [];
+  players: Array<{
+    number: number;
+    name: string;
+    position: string;
+    height: string;
+  }> = [];
 
-
-  newTeam = {
+  newTeam: TeamForm = {
     name: '',
-    coachName: '',
+    city: '',
+    state: '',
+    foundationDate: '',
     playerCount: null,
+    coachName: '',
   };
 
-  charCount = {
-    teamName: 0,
-    coachName: 0,
-    playerCount: 0
-  };
+  teamsWithAthletes: any[] = [];
 
+  constructor(
+    private teamService: TeamService,
+    private playerService: PlayerService
+  ) {}
 
-  players: Array<{ number: number; name: string; position: string; height: string }> = [];
+  ngOnInit() {
+    this.loadTeams();
+  }
+  loadTeams() {
+    this.teamService.getTeams().subscribe(
+      (response) => {
+        console.log('Teams response:', response);
+        this.teams = response.content || [];
+        this.loadAllPlayers();
+      },
+      (error) => {
+        console.error('Erro ao carregar times:', error);
+        this.teams = [];
+      }
+    );
+  }
 
-  teams = [
-    { name: 'Time A' },
-    { name: 'Time B' },
-    { name: 'Time C' },
-    { name: 'Time D' },
-  ];
+  loadAllPlayers() {
+    this.playerService.getPlayers().subscribe(
+      (response) => {
+        console.log('Players response:', response);
+        this.athletes = response.content || [];
+        this.updateTeamsWithAthletes();
+      },
+      (error) => {
+        console.error('Erro ao carregar jogadores:', error);
+        this.athletes = [];
+      }
+    );
+  }
 
-  athletes = [
-    { number: 1, name: 'João da Silva', position: 'Goleiro', height: 1.95, teamName: 'Time A' },
-    { number: 2, name: 'José Pereira', position: 'Zagueiro', height: 1.85, teamName: 'Time A' },
+  updateTeamsWithAthletes() {
+    if (this.teams && Array.isArray(this.teams)) {
+      this.teamsWithAthletes = this.teams.map((team) => {
+        return {
+          ...team,
+          athletes: this.athletes.filter(
+            (athlete) => athlete.teamId === team.id
+          ),
+          isExpanded: false,
+        };
+      });
+    }
+  }
 
-    { number: 3, name: 'Maria Oliveira', position: 'Atacante', height: 1.75, teamName: 'Time B' },
-    { number: 4, name: 'Ana Souza', position: 'Meio-campista', height: 1.70, teamName: 'Time B' },
-    { number: 5, name: 'Pedro Santos', position: 'Lateral', height: 1.80, teamName: 'Time C' },
-    { number: 6, name: 'Paulo Pereira', position: 'Zagueiro', height: 1.85, teamName: 'Time C' },
-    { number: 7, name: 'Marta Silva', position: 'Atacante', height: 1.75, teamName: 'Time D' },
-    { number: 8, name: 'Carla Oliveira', position: 'Meio-campista', height: 1.70, teamName: 'Time D' },
-    { number: 9, name: 'Ricardo Souza', position: 'Lateral', height: 1.80, teamName: 'Time A' },
-    { number: 10, name: 'Fernanda Santos', position: 'Goleiro', height: 1.95, teamName: 'Time B' },
-    { number: 1, name: 'João da Silva', position: 'Goleiro', height: 1.95, teamName: 'Time A' },
-    { number: 2, name: 'José Pereira', position: 'Zagueiro', height: 1.85, teamName: 'Time A' },
+  toggleOptionsMenu(event: Event): void {
+    const menu = (event.target as HTMLElement).nextElementSibling;
+    if (menu) {
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('visible');
+    }
+  }
 
-    { number: 3, name: 'Maria Oliveira', position: 'Atacante', height: 1.75, teamName: 'Time B' },
-    { number: 4, name: 'Ana Souza', position: 'Meio-campista', height: 1.70, teamName: 'Time B' },
-    { number: 5, name: 'Pedro Santos', position: 'Lateral', height: 1.80, teamName: 'Time C' },
-    { number: 6, name: 'Paulo Pereira', position: 'Zagueiro', height: 1.85, teamName: 'Time C' },
-    { number: 7, name: 'Marta Silva', position: 'Atacante', height: 1.75, teamName: 'Time D' },
-    { number: 8, name: 'Carla Oliveira', position: 'Meio-campista', height: 1.70, teamName: 'Time D' },
-    { number: 9, name: 'Ricardo Souza', position: 'Lateral', height: 1.80, teamName: 'Time A' },
-    { number: 10, name: 'Fernanda Santos', position: 'Goleiro', height: 1.95, teamName: 'Time B' },
-    { number: 1, name: 'João da Silva', position: 'Goleiro', height: 1.95, teamName: 'Time A' },
-    { number: 2, name: 'José Pereira', position: 'Zagueiro', height: 1.85, teamName: 'Time A' },
+  generatePlayerFields() {
+    const count = this.newTeam.playerCount || 0;
+    this.players = Array.from({ length: count }, (_, i) => ({
+      number: 0,
+      name: '',
+      position: '',
+      height: '',
+    }));
+  }
 
-    { number: 3, name: 'Maria Oliveira', position: 'Atacante', height: 1.75, teamName: 'Time B' },
-    { number: 4, name: 'Ana Souza', position: 'Meio-campista', height: 1.70, teamName: 'Time B' },
-    { number: 5, name: 'Pedro Santos', position: 'Lateral', height: 1.80, teamName: 'Time C' },
-    { number: 6, name: 'Paulo Pereira', position: 'Zagueiro', height: 1.85, teamName: 'Time C' },
-    { number: 7, name: 'Marta Silva', position: 'Atacante', height: 1.75, teamName: 'Time D' },
-    { number: 8, name: 'Carla Oliveira', position: 'Meio-campista', height: 1.70, teamName: 'Time D' },
-    { number: 9, name: 'Ricardo Souza', position: 'Lateral', height: 1.80, teamName: 'Time A' },
-    { number: 10, name: 'Fernanda Santos', position: 'Goleiro', height: 1.95, teamName: 'Time B' },
-  ];
+  saveTeam() {
+    if (!this.newTeam.name?.trim()) {
+      alert('O nome do time é obrigatório');
+      return;
+    }
+    if (!this.newTeam.city?.trim()) {
+      alert('A cidade é obrigatória');
+      return;
+    }
+    if (!this.newTeam.state?.trim()) {
+      alert('O estado é obrigatório');
+      return;
+    }
+    if (!this.newTeam.foundationDate) {
+      alert('A data de fundação é obrigatória');
+      return;
+    }
+
+    const teamData: Team = {
+      name: this.newTeam.name.trim(),
+      city: this.newTeam.city.trim(),
+      state: this.newTeam.state.trim(),
+      foundationDate: this.newTeam.foundationDate,
+    };
+
+    console.log('Enviando time:', teamData);
+
+    this.teamService.addTeam(teamData).subscribe({
+      next: (response) => {
+        console.log('Time salvo com sucesso:', response);
+        this.loadTeams();
+        this.closeModal();
+      },
+      error: (error) => {
+        console.error('Erro ao salvar time:', error);
+        if (error.error?.message) {
+          alert(error.error.message);
+        } else {
+          alert('Erro ao salvar o time. Verifique os dados.');
+        }
+      },
+    });
+  }
+
+  confirmRemove() {
+    if (this.teamToRemove?.id) {
+      this.teamService.deleteTeam(this.teamToRemove.id).subscribe(
+        () => {
+          this.loadTeams();
+          this.closeRemoveModal();
+        },
+        (error) => {
+          console.error('Erro ao remover time:', error);
+        }
+      );
+    }
+  }
 
   openModal(title: string): void {
     this.isModalOpen = true;
@@ -83,7 +175,7 @@ export class TeamsAndAthletesComponent {
     this.resetForm();
   }
 
-  openRemoveModal(team: any): void {
+  openRemoveModal(team: Team): void {
     this.teamToRemove = team;
     this.isRemoveModalOpen = true;
   }
@@ -93,54 +185,19 @@ export class TeamsAndAthletesComponent {
     this.teamToRemove = null;
   }
 
-  teamsWithAthletes = this.teams.map(team => {
-    return {
-      ...team,
-      athletes: this.athletes.filter(athlete => athlete.teamName === team.name),
-      isExpanded: false
-    };
-  });
-
-
-  toggleOptionsMenu(event: Event): void {
-    const menu = (event.target as HTMLElement).nextElementSibling;
-    if (menu) {
-      menu.classList.toggle('hidden');
-      menu.classList.toggle('visible');
-    }
-  }
-
-
   toggleExpand(team: any) {
     team.isExpanded = !team.isExpanded;
   }
 
-  saveTeam() {
-    console.log('Team saved:', this.newTeam);
-    this.closeModal();
-  }
-
-  generatePlayerFields() {
-    const count = this.newTeam.playerCount || 0;
-
-    this.players = Array.from({ length: count }, (_, i) => ({
-      number: 0,
-      name: '',
-      position: '',
-      height: '',
-    }));
-  }
-
   resetForm() {
-    this.newTeam = { name: '', coachName: '', playerCount: null };
+    this.newTeam = {
+      name: '',
+      city: '',
+      state: '',
+      foundationDate: '',
+      playerCount: null,
+      coachName: '',
+    };
     this.players = [];
-  }
-
-  confirmRemove(): void {
-    if (this.teamToRemove) {
-      
-      console.log('Removendo time:', this.teamToRemove);
-    }
-    this.closeRemoveModal();
   }
 }
