@@ -55,13 +55,64 @@
                 <button class="save-btn" (click)="saveTeam()">Salvar</button>
             </div>
 
-            <form class="modal-body">
-                <input id="team-name" type="text" [(ngModel)]="newTeam.name" name="teamName" maxlength="20"
-                    placeholder="Nome do Time" />
-                <input id="coach-name" type="text" [(ngModel)]="newTeam.coachName" name="coachName" maxlength="20"
-                    placeholder="Nome do Técnico" />
-                <input id="player-count" type="number" [(ngModel)]="newTeam.playerCount" name="playerCount" max="20"
-                    maxlength="2" placeholder="Quantidade de Jogadores" (change)="generatePlayerFields()" />
+            <form class="modal-body" #teamForm="ngForm">
+                <input 
+                    id="team-name" 
+                    type="text" 
+                    [(ngModel)]="newTeam.name" 
+                    name="teamName" 
+                    maxlength="20"
+                    placeholder="Nome do Time *"
+                    required
+                />
+                
+                <input 
+                    id="team-city" 
+                    type="text" 
+                    [(ngModel)]="newTeam.city" 
+                    name="city"
+                    maxlength="50"
+                    placeholder="Cidade *"
+                    required
+                />
+                
+                <input 
+                    id="team-state" 
+                    type="text" 
+                    [(ngModel)]="newTeam.state" 
+                    name="state"
+                    maxlength="2"
+                    placeholder="Estado *"
+                    required
+                />
+                
+                <input 
+                    id="foundation-date" 
+                    type="date" 
+                    [(ngModel)]="newTeam.foundationDate" 
+                    name="foundationDate"
+                    placeholder="Data de Fundação *"
+                    required
+                />
+
+                <input 
+                    id="coach-name" 
+                    type="text" 
+                    [(ngModel)]="newTeam.coachName" 
+                    name="coachName" 
+                    maxlength="20"
+                    placeholder="Nome do Técnico" 
+                />
+                
+                <input 
+                    id="player-count" 
+                    type="number" 
+                    [(ngModel)]="newTeam.playerCount" 
+                    name="playerCount" 
+                    max="20"
+                    placeholder="Quantidade de Jogadores" 
+                    (change)="generatePlayerFields()" 
+                />
             </form>
 
             <div *ngIf="players.length > 0" class="modal-table">
