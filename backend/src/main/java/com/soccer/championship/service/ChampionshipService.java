@@ -96,25 +96,27 @@ public class ChampionshipService {
 
   @Transactional
   public ChampionshipDTO update(Long id, ChampionshipDTO championshipDTO) {
-    log.debug("Atualizando campeonato com ID {}: {}", id, championshipDTO);
-
-    Championship championship = championshipRepository.findById(id)
-      .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado com ID: " + id));
-
-    if (!championship.getName().equals(championshipDTO.name()) ||
-      !championship.getSeason().equals(championshipDTO.season())) {
-      validateNameAndSeason(championshipDTO);
-    }
-
-    championshipMapper.updateEntity(championshipDTO, championship);
-
-    if (championshipDTO.teamIds() != null) {
-      championship.getTeams().clear();
-      addTeamsToChampionship(championship, championshipDTO.teamIds());
-    }
-
-    championship = championshipRepository.save(championship);
-    return championshipMapper.toDTO(championship);
+      try {
+          log.error("Dados recebidos: ID={}, DTO={}", id, championshipDTO);
+          
+          Championship championship = championshipRepository.findById(id)
+              .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado"));
+          
+          log.error("Campeonato encontrado antes da atualização: {}", championship);
+          
+          championshipMapper.updateEntity(championshipDTO, championship);
+          
+          log.error("Campeonato após mapeamento: {}", championship);
+          
+          championship = championshipRepository.save(championship);
+          
+          log.error("Campeonato salvo: {}", championship);
+          
+          return championshipMapper.toDTO(championship);
+      } catch (Exception e) {
+          log.error("Erro na atualização do campeonato: ", e);
+          throw e;
+      }
   }
 
   @Transactional
