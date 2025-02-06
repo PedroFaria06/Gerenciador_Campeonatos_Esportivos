@@ -1,58 +1,102 @@
 <div class="relatorio-container">
-  <!-- Main Content -->
   <div class="content">
-    <!-- Grid Layout -->
     <div class="relatorio-grid">
-      <!-- Label relatório -->
       <div class="relatorio">
         <h2>Relatório Geral</h2>
         <button id="menu-button" (click)="toggleForm()">Visualizar</button>
       </div>
 
-      <!-- Formulário -->
       <div *ngIf="formVisible" class="form-container">
-        <form>
+        <form (ngSubmit)="generateReport()">
           <label for="campeonato">Selecione o campeonato:</label>
-          <select id="campeonato">
-            <option value="" disabled selected>Selecione o campeonato</option>
-            <option *ngFor="let campeonato of campeonatos" [value]="campeonato.id">{{ campeonato.nome }}</option>
-          </select>
-
-          <label for="etapa">Selecione a etapa:</label>
-          <select id="etapa">
-            <option value="" disabled selected>Selecione a etapa</option>
-            <option *ngFor="let etapa of etapas" [value]="etapa.id">{{ etapa.nome }}</option>
+          <select id="campeonato" [(ngModel)]="selectedChampionship" 
+                  (ngModelChange)="onChampionshipSelect($event)" name="championship">
+            <option [ngValue]="undefined">Selecione o campeonato</option>
+            <option *ngFor="let camp of campeonatos" [value]="camp.id">
+              {{ camp.name }}
+            </option>
           </select>
 
           <label for="jogo">Selecione o jogo:</label>
-          <select id="jogo">
-            <option value="" disabled selected>Selecione o jogo</option>
-            <option *ngFor="let jogo of jogos" [value]="jogo.id">{{ jogo.nome }}</option>
+          <select id="jogo" [(ngModel)]="selectedMatch" name="match">
+            <option [ngValue]="undefined">Selecione o jogo</option>
+            <option *ngFor="let match of matches" [value]="match.id">
+              Rodada {{ match.round }} - {{ match.matchDate | date:'dd/MM/yyyy HH:mm' }}
+            </option>
           </select>
 
-          <!-- Checkboxes -->
           <div class="checkbox-container">
             <label for="sumula">
-              <input type="checkbox" id="sumula"> Trazer súmula(s)
+              <input type="checkbox" id="sumula" [(ngModel)]="showSumula" name="sumula">
+              Trazer súmula(s)
             </label>
             <label for="classificacao">
-              <input type="checkbox" id="classificacao"> Trazer classificação
+              <input type="checkbox" id="classificacao" [(ngModel)]="showClassificacao" name="classificacao">
+              Trazer classificação
             </label>
           </div>
 
-          <!-- Botões -->
           <div class="button-container">
-            <button type="button" class="btn visualizar" (click)="openModal()">Visualizar</button>
+            <button type="submit" class="btn visualizar">Visualizar</button>
             <button type="button" class="btn cancelar" (click)="toggleForm()">Cancelar</button>
           </div>
         </form>
       </div>
     </div>
   </div>
+
   <div *ngIf="isModalVisible" class="modal-overlay">
     <div class="modal-box">
       <h2>Detalhes do Relatório</h2>
-      <p>Conteúdo do relatório será exibido aqui...</p>
+      
+      <div *ngIf="loading" class="loading">
+        Carregando...
+      </div>
+
+      <div *ngIf="!loading">
+        <div *ngIf="showClassificacao && standings.length > 0" class="classificacao-section">
+          <h3>Classificação</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>P</th>
+                <th>J</th>
+                <th>V</th>
+                <th>E</th>
+                <th>D</th>
+                <th>GP</th>
+                <th>GC</th>
+                <th>SG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let team of standings; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ team.teamName }}</td>
+                <td>{{ team.points }}</td>
+                <td>{{ team.matchesPlayed }}</td>
+                <td>{{ team.victories }}</td>
+                <td>{{ team.draws }}</td>
+                <td>{{ team.defeats }}</td>
+                <td>{{ team.goalsFor }}</td>
+                <td>{{ team.goalsAgainst }}</td>
+                <td>{{ team.goalDifference }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="showSumula && matchEvents.length > 0" class="sumula-section">
+          <h3>Súmula da Partida</h3>
+          <div *ngFor="let event of matchEvents" class="event-item">
+            {{ event.minute }}' - {{ event.eventType }} - Jogador ID: {{ event.playerId }}
+            <p *ngIf="event.observation">{{ event.observation }}</p>
+          </div>
+        </div>
+      </div>
+
       <button class="btn fechar" (click)="closeModal()">Fechar</button>
     </div>
   </div>
