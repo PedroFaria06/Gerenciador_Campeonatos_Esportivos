@@ -16,11 +16,14 @@ import { TeamForm } from '../models/team-form.interface';
 })
 export class TeamsAndAthletesComponent implements OnInit {
   isModalOpen = false;
+  isPlayerModalOpen = false;
   modalTitle = '';
   isRemoveModalOpen = false;
   teamToRemove: Team | null = null;
+  selectedTeam: Team | null = null;
   teams: Team[] = [];
   athletes: Player[] = [];
+  positions: any[] = [];
   players: Array<{
     number: number;
     name: string;
@@ -37,6 +40,14 @@ export class TeamsAndAthletesComponent implements OnInit {
     coachName: '',
   };
 
+  newPlayer: Player = {
+    name: '',
+    birthDate: '',
+    position: '',
+    shirtNumber: 0,
+    teamId: 0,
+  };
+
   teamsWithAthletes: any[] = [];
 
   constructor(
@@ -46,11 +57,12 @@ export class TeamsAndAthletesComponent implements OnInit {
 
   ngOnInit() {
     this.loadTeams();
+    this.loadPositions();
   }
+
   loadTeams() {
     this.teamService.getTeams().subscribe(
       (response) => {
-        console.log('Teams response:', response);
         this.teams = response.content || [];
         this.loadAllPlayers();
       },
@@ -64,7 +76,6 @@ export class TeamsAndAthletesComponent implements OnInit {
   loadAllPlayers() {
     this.playerService.getPlayers().subscribe(
       (response) => {
-        console.log('Players response:', response);
         this.athletes = response.content || [];
         this.updateTeamsWithAthletes();
       },
@@ -75,55 +86,131 @@ export class TeamsAndAthletesComponent implements OnInit {
     );
   }
 
+  loadPositions() {
+    this.playerService.getPositions().subscribe({
+      next: (positions) => {
+        this.positions = positions;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar posições:', error);
+      },
+    });
+  }
+
   updateTeamsWithAthletes() {
     if (this.teams && Array.isArray(this.teams)) {
-      this.teamsWithAthletes = this.teams.map((team) => {
-        return {
-          ...team,
-          athletes: this.athletes.filter(
-            (athlete) => athlete.teamId === team.id
-          ),
-          isExpanded: false,
-        };
-      });
+      this.teamsWithAthletes = this.teams.map((team) => ({
+        ...team,
+        athletes: this.athletes.filter((athlete) => athlete.teamId === team.id),
+        isExpanded: false,
+      }));
     }
   }
 
   toggleOptionsMenu(event: Event): void {
-    const menu = (event.target as HTMLElement).nextElementSibling;
-    if (menu) {
-      menu.classList.toggle('hidden');
-      menu.classList.toggle('visible');
+    const button = event.target as HTMLElement;
+    const menu = button.nextElementSibling as HTMLElement;
+    const isCurrentlyVisible = menu.classList.contains('visible');
+
+    const allMenus = document.querySelectorAll('.options-menu');
+    allMenus.forEach((m) => {
+      m.classList.remove('visible');
+      m.classList.add('hidden');
+    });
+
+    if (!isCurrentlyVisible) {
+      menu.classList.remove('hidden');
+      menu.classList.add('visible');
+    }
+
+    event.stopPropagation();
+  }
+
+  toggleExpand(team: any): void {
+    team.isExpanded = !team.isExpanded;
+
+    this.teamsWithAthletes.forEach((t) => {
+      if (t !== team) {
+        t.isExpanded = false;
+      }
+    });
+  }
+
+  openModal(title: string, team?: Team): void {
+    this.isModalOpen = true;
+    this.modalTitle = title;
+
+    if (team && title === 'Editar Time') {
+      this.selectedTeam = team;
+      this.newTeam = {
+        name: team.name,
+        city: team.city,
+        state: team.state,
+        foundationDate: team.foundationDate,
+        playerCount: this.athletes.filter((a) => a.teamId === team.id).length,
+        coachName: '',
+      };
     }
   }
 
-  generatePlayerFields() {
-    const count = this.newTeam.playerCount || 0;
-    this.players = Array.from({ length: count }, (_, i) => ({
-      number: 0,
+  openPlayerModal(team: Team): void {
+    this.selectedTeam = team;
+    this.isPlayerModalOpen = true;
+    this.newPlayer = {
       name: '',
+      birthDate: '',
       position: '',
-      height: '',
-    }));
+      shirtNumber: 0,
+      teamId: team.id!,
+    };
+  }
+
+  savePlayer(): void {
+    if (!this.selectedTeam || !this.validatePlayerForm()) return;
+
+    const playerData = {
+      ...this.newPlayer,
+      birthDate: this.formatDate(this.newPlayer.birthDate),
+    };
+
+    this.playerService.addPlayer(playerData).subscribe({
+      next: () => {
+        this.loadAllPlayers();
+        this.closePlayerModal();
+      },
+      error: (error) => {
+        console.error('Erro ao salvar jogador:', error);
+        alert('Erro ao salvar o jogador. Verifique os dados.');
+      },
+    });
+  }
+
+  validatePlayerForm(): boolean {
+    if (!this.newPlayer.name?.trim()) {
+      alert('O nome do jogador é obrigatório');
+      return false;
+    }
+    if (!this.newPlayer.birthDate) {
+      alert('A data de nascimento é obrigatória');
+      return false;
+    }
+    if (!this.newPlayer.position) {
+      alert('A posição é obrigatória');
+      return false;
+    }
+    if (
+      !this.newPlayer.shirtNumber ||
+      this.newPlayer.shirtNumber < 1 ||
+      this.newPlayer.shirtNumber > 99
+    ) {
+      alert('O número da camisa deve estar entre 1 e 99');
+      return false;
+    }
+    return true;
   }
 
   saveTeam() {
-    if (!this.newTeam.name?.trim()) {
-      alert('O nome do time é obrigatório');
-      return;
-    }
-    if (!this.newTeam.city?.trim()) {
-      alert('A cidade é obrigatória');
-      return;
-    }
-    if (!this.newTeam.state?.trim()) {
-      alert('O estado é obrigatório');
-      return;
-    }
-    if (!this.newTeam.foundationDate) {
-      alert('A data de fundação é obrigatória');
-      return;
-    }
+    if (!this.validateTeamForm()) return;
 
     const teamData: Team = {
       name: this.newTeam.name.trim(),
@@ -132,47 +219,57 @@ export class TeamsAndAthletesComponent implements OnInit {
       foundationDate: this.newTeam.foundationDate,
     };
 
-    console.log('Enviando time:', teamData);
-
-    this.teamService.addTeam(teamData).subscribe({
-      next: (response) => {
-        console.log('Time salvo com sucesso:', response);
-        this.loadTeams();
-        this.closeModal();
-      },
-      error: (error) => {
-        console.error('Erro ao salvar time:', error);
-        if (error.error?.message) {
-          alert(error.error.message);
-        } else {
-          alert('Erro ao salvar o time. Verifique os dados.');
-        }
-      },
-    });
-  }
-
-  confirmRemove() {
-    if (this.teamToRemove?.id) {
-      this.teamService.deleteTeam(this.teamToRemove.id).subscribe(
-        () => {
+    if (this.selectedTeam?.id) {
+      this.teamService.updateTeam(this.selectedTeam.id, teamData).subscribe({
+        next: () => {
           this.loadTeams();
-          this.closeRemoveModal();
+          this.closeModal();
         },
-        (error) => {
-          console.error('Erro ao remover time:', error);
-        }
-      );
+        error: (error) => {
+          console.error('Erro ao atualizar time:', error);
+          alert('Erro ao atualizar o time. Verifique os dados.');
+        },
+      });
+    } else {
+      this.teamService.addTeam(teamData).subscribe({
+        next: () => {
+          this.loadTeams();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Erro ao salvar time:', error);
+          alert('Erro ao salvar o time. Verifique os dados.');
+        },
+      });
     }
   }
 
-  openModal(title: string): void {
-    this.isModalOpen = true;
-    this.modalTitle = title;
+  validateTeamForm(): boolean {
+    if (!this.newTeam.name?.trim()) {
+      alert('O nome do time é obrigatório');
+      return false;
+    }
+    if (!this.newTeam.city?.trim()) {
+      alert('A cidade é obrigatória');
+      return false;
+    }
+    if (!this.newTeam.state?.trim()) {
+      alert('O estado é obrigatório');
+      return false;
+    }
+    if (!this.newTeam.foundationDate) {
+      alert('A data de fundação é obrigatória');
+      return false;
+    }
+    return true;
   }
 
-  closeModal() {
-    this.isModalOpen = false;
-    this.resetForm();
+  formatDate(date: string): string {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(d.getDate()).padStart(2, '0')}`;
   }
 
   openRemoveModal(team: Team): void {
@@ -185,8 +282,37 @@ export class TeamsAndAthletesComponent implements OnInit {
     this.teamToRemove = null;
   }
 
-  toggleExpand(team: any) {
-    team.isExpanded = !team.isExpanded;
+  confirmRemove() {
+    if (this.teamToRemove?.id) {
+      this.teamService.deleteTeam(this.teamToRemove.id).subscribe({
+        next: () => {
+          this.loadTeams();
+          this.closeRemoveModal();
+        },
+        error: (error) => {
+          console.error('Erro ao remover time:', error);
+          alert('Erro ao remover o time. Tente novamente.');
+        },
+      });
+    }
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.selectedTeam = null;
+    this.resetForm();
+  }
+
+  closePlayerModal() {
+    this.isPlayerModalOpen = false;
+    this.selectedTeam = null;
+    this.newPlayer = {
+      name: '',
+      birthDate: '',
+      position: '',
+      shirtNumber: 0,
+      teamId: 0,
+    };
   }
 
   resetForm() {

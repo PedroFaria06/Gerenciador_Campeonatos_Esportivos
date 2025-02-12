@@ -1,41 +1,46 @@
 <div class="container">
     <div class="aside-content">
-        <!-- Conteúdo Principal -->
         <main class="content">
-            <!-- Botão de Cadastrar -->
-            <button class="register-btn" (click)="openModal('Cadastrar Time')">CADASTRAR</button>
+            <button class="register-btn" (click)="openModal('Cadastrar Time')">CADASTRAR TIME</button>
 
-            <!-- Cards de Times -->
             <div class="card" *ngFor="let team of teamsWithAthletes">
                 <div class="shield-team">
                     <div class="shield"></div>
                     <h1 class="team-name">{{ team.name }}</h1>
                 </div>
                 <div class="divider"></div>
-                <div class="arrow-options">
-                    <!-- Botão de Opções -->
-                    <button class="option-btn" (click)="toggleOptionsMenu($event)">Opções</button>
-                    <div class="options-menu hidden">
-                        <button (click)="openModal('Editar Time')">Editar</button>
-                        <button (click)="openRemoveModal(team)">Remover</button>
+                <div class="card-actions">
+                    <div class="arrow-options">
+                        <button class="option-btn" (click)="toggleOptionsMenu($event)">Opções</button>
+                        <div class="options-menu hidden">
+                            <button (click)="openModal('Editar Time', team)">Editar Time</button>
+                            <button (click)="openPlayerModal(team)">Adicionar Jogador</button>
+                            <button (click)="openRemoveModal(team)">Remover Time</button>
+                        </div>
                     </div>
+                    <button class="view-players-btn" (click)="toggleExpand(team)">
+                        {{ team.isExpanded ? 'Ocultar Jogadores' : 'Ver Jogadores' }}
+                    </button>
                 </div>
                 <div class="expandable" [class.expanded]="team.isExpanded">
-                    <table class="data-table">
+                    <table class="data-table" *ngIf="team.isExpanded">
                         <thead>
                             <tr>
                                 <th>Número</th>
                                 <th>Nome</th>
                                 <th>Posição</th>
-                                <th>Altura</th>
+                                <th>Data Nasc.</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let athlete of team.athletes">
-                                <td>{{ athlete.number }}</td>
+                                <td>{{ athlete.shirtNumber }}</td>
                                 <td>{{ athlete.name }}</td>
                                 <td>{{ athlete.position }}</td>
-                                <td>{{ athlete.height }}</td>
+                                <td>{{ athlete.birthDate | date:'dd/MM/yyyy' }}</td>
+                            </tr>
+                            <tr *ngIf="team.athletes.length === 0">
+                                <td colspan="4" class="no-players">Nenhum jogador cadastrado</td>
                             </tr>
                         </tbody>
                     </table>
@@ -44,7 +49,6 @@
         </main>
     </div>
 
-    <!-- Modal de Cadastro -->
     <div class="modal" *ngIf="isModalOpen">
         <div class="modal-content">
             <div class="modal-header">
@@ -57,7 +61,6 @@
 
             <form class="modal-body" #teamForm="ngForm">
                 <input 
-                    id="team-name" 
                     type="text" 
                     [(ngModel)]="newTeam.name" 
                     name="teamName" 
@@ -67,7 +70,6 @@
                 />
                 
                 <input 
-                    id="team-city" 
                     type="text" 
                     [(ngModel)]="newTeam.city" 
                     name="city"
@@ -77,7 +79,6 @@
                 />
                 
                 <input 
-                    id="team-state" 
                     type="text" 
                     [(ngModel)]="newTeam.state" 
                     name="state"
@@ -87,70 +88,67 @@
                 />
                 
                 <input 
-                    id="foundation-date" 
                     type="date" 
                     [(ngModel)]="newTeam.foundationDate" 
                     name="foundationDate"
                     placeholder="Data de Fundação *"
                     required
                 />
-
-                <input 
-                    id="coach-name" 
-                    type="text" 
-                    [(ngModel)]="newTeam.coachName" 
-                    name="coachName" 
-                    maxlength="20"
-                    placeholder="Nome do Técnico" 
-                />
-                
-                <input 
-                    id="player-count" 
-                    type="number" 
-                    [(ngModel)]="newTeam.playerCount" 
-                    name="playerCount" 
-                    max="20"
-                    placeholder="Quantidade de Jogadores" 
-                    (change)="generatePlayerFields()" 
-                />
             </form>
-
-            <div *ngIf="players.length > 0" class="modal-table">
-                <table class="player-table">
-                    <thead>
-                        <tr>
-                            <th>Número</th>
-                            <th>Nome</th>
-                            <th>Posição</th>
-                            <th>Altura</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let player of players; let i = index">
-                            <td>
-                                <input type="number" [(ngModel)]="player.number" [name]="'playerNumber' + i" max="99"
-                                    placeholder="Número" />
-                            </td>
-                            <td>
-                                <input type="text" [(ngModel)]="player.name" [name]="'playerName' + i" maxlength="50"
-                                    placeholder="Nome" />
-                            </td>
-                            <td>
-                                <input type="text" [(ngModel)]="player.position" [name]="'playerPosition' + i"
-                                    maxlength="50" placeholder="Posição" />
-                            </td>
-                            <td>
-                                <input type="text" [(ngModel)]="player.height" [name]="'playerHeight' + i" maxlength="4"
-                                    placeholder="Altura" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
-    <!-- Modal de Confirmação -->
+    <div class="modal" *ngIf="isPlayerModalOpen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="btnClose-label">
+                    <span class="close-btn" (click)="closePlayerModal()">&times;</span>
+                    <h2>Adicionar Jogador - {{ selectedTeam?.name }}</h2>
+                </div>
+                <button class="save-btn" (click)="savePlayer()">Salvar</button>
+            </div>
+
+            <form class="modal-body" #playerForm="ngForm">
+                <input 
+                    type="text" 
+                    [(ngModel)]="newPlayer.name" 
+                    name="playerName"
+                    maxlength="50"
+                    placeholder="Nome do Jogador *"
+                    required
+                />
+                
+                <input 
+                    type="date" 
+                    [(ngModel)]="newPlayer.birthDate" 
+                    name="birthDate"
+                    placeholder="Data de Nascimento *"
+                    required
+                />
+                
+                <select 
+                    [(ngModel)]="newPlayer.position" 
+                    name="position"
+                    required>
+                    <option value="">Selecione a Posição *</option>
+                    <option *ngFor="let pos of positions" [value]="pos.codigo">
+                        {{pos.descricao}}
+                    </option>
+                </select>
+                
+                <input 
+                    type="number" 
+                    [(ngModel)]="newPlayer.shirtNumber" 
+                    name="shirtNumber"
+                    min="1"
+                    max="99"
+                    placeholder="Número da Camisa (1-99) *"
+                    required
+                />
+            </form>
+        </div>
+    </div>
+
     <div class="confirmation-modal" *ngIf="isRemoveModalOpen">
         <div class="modal-remove-content">
             <h2>Remover time</h2>
