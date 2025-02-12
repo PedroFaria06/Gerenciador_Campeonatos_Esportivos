@@ -91,7 +91,7 @@
         <div *ngIf="showSumula && matchEvents.length > 0" class="sumula-section">
           <h3>Súmula da Partida</h3>
           <div *ngFor="let event of matchEvents" class="event-item">
-            {{ event.minute }}' - {{ event.eventType }} - Jogador ID: {{ event.playerId }}
+            {{ event.eventMinute }}' - {{ event.eventType }} - Jogador ID: {{ event.playerId }}
             <p *ngIf="event.observation">{{ event.observation }}</p>
           </div>
         </div>
