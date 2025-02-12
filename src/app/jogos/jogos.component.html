@@ -133,50 +133,95 @@
 
   <div class="modal" *ngIf="showEditMatchModal">
     <div class="modal-content">
-      <h2>Atualizar Partida</h2>
-      <form (ngSubmit)="updateMatch()">
-        <div class="form-group">
-          <p class="match-teams">
-            {{ getTeamName(selectedMatch.homeTeamId) }} x {{ getTeamName(selectedMatch.awayTeamId) }}
-          </p>
-        </div>
+        <h2>Atualizar Partida</h2>
+        <form (ngSubmit)="updateMatch()">
+            <div class="form-group">
+                <p class="match-teams">
+                    {{ getTeamName(selectedMatch.homeTeamId) }} x {{ getTeamName(selectedMatch.awayTeamId) }}
+                </p>
+            </div>
 
-        <div class="form-group">
-          <label>Status:</label>
-          <select [(ngModel)]="selectedMatch.status" name="status" required>
-            <option *ngFor="let status of statusOptions" [value]="status.codigo">
-              {{ status.descricao }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group score-group">
-          <div>
-            <label>Gols Casa:</label>
-            <input type="number" [(ngModel)]="selectedMatch.homeTeamGoals" name="homeGoals" min="0">
+            <div class="form-group">
+              <label>Status:</label>
+              <select [(ngModel)]="selectedMatch.status" name="status" required>
+                  <option *ngFor="let status of statusOptions" [value]="status.codigo">
+                      {{ status.descricao }}
+                  </option>
+              </select>
           </div>
-          <div>
-            <label>Gols Visitante:</label>
-            <input type="number" [(ngModel)]="selectedMatch.awayTeamGoals" name="awayGoals" min="0">
+
+            <div class="form-group score-group">
+                <div>
+                    <label>Gols Casa:</label>
+                    <input type="number" [(ngModel)]="selectedMatch.homeTeamGoals" name="homeGoals" min="0">
+                </div>
+                <div>
+                    <label>Gols Visitante:</label>
+                    <input type="number" [(ngModel)]="selectedMatch.awayTeamGoals" name="awayGoals" min="0">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn-add-event" (click)="openAddEventForm()">
+                    Adicionar Evento
+                </button>
+            </div>
+
+            <div class="event-form" *ngIf="showEventForm">
+              <h3>Novo Evento</h3>
+              <div class="form-group">
+                  <label>Tipo:</label>
+                  <select [(ngModel)]="newEvent.eventType" name="eventType" required>
+                      <option value="">Selecione o tipo de evento</option>
+                      <option value="GOAL">Gol</option>
+                      <option value="YELLOW_CARD">Cartão Amarelo</option>
+                      <option value="RED_CARD">Cartão Vermelho</option>
+                  </select>
+              </div>
+          
+              <div class="form-group">
+                  <label>Jogador:</label>
+                  <select [(ngModel)]="newEvent.playerId" name="playerId" required>
+                      <option value="">Selecione o jogador</option>
+                      <option *ngFor="let player of availablePlayers" [value]="player.id">
+                          {{ player.name }} ({{ getTeamName(player.teamId) }})
+                      </option>
+                  </select>
+              </div>
+          
+              <div class="form-group">
+                  <label>Minuto:</label>
+                  <input type="number" [(ngModel)]="newEvent.eventMinute" name="minute" 
+                         min="0" max="90" required>
+              </div>
+          
+              <div class="form-group">
+                  <label>Observação:</label>
+                  <input type="text" [(ngModel)]="newEvent.observation" name="observation">
+              </div>
+          
+              <div class="button-group">
+                  <button type="button" (click)="saveEvent()">Adicionar</button>
+                  <button type="button" (click)="closeEventForm()">Cancelar</button>
+              </div>
           </div>
-        </div>
 
-        <div class="events-list" *ngIf="matchEvents.length > 0">
-          <h3>Eventos da Partida</h3>
-          <ul>
-            <li *ngFor="let event of matchEvents">
-              {{ event.minute }}' - {{ getEventTypeDescription(event.eventType) }} - 
-              {{ getPlayerName(event.playerId) }}
-              <button class="btn-remove" (click)="removeEvent(event.id)">×</button>
-            </li>
-          </ul>
-        </div>
+            <div class="events-list" *ngIf="matchEvents.length > 0">
+                <h3>Eventos da Partida</h3>
+                <ul>
+                    <li *ngFor="let event of matchEvents">
+                        {{ event.eventMinute }}' - {{ getEventTypeDescription(event.eventType) }} - 
+                        {{ getPlayerName(event.playerId) }}
+                        <button class="btn-remove" (click)="removeEvent(event.id)">×</button>
+                    </li>
+                </ul>
+            </div>
 
-        <div class="button-group">
-          <button type="submit">Salvar</button>
-          <button type="button" (click)="closeEditMatchModal()">Cancelar</button>
-        </div>
-      </form>
+            <div class="button-group">
+                <button type="submit">Salvar</button>
+                <button type="button" (click)="closeEditMatchModal()">Cancelar</button>
+            </div>
+        </form>
     </div>
-  </div>
+</div>
 </div>
