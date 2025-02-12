@@ -10,9 +10,16 @@ import {
 } from '../models/championship.interface';
 import { MatchPhase } from '../models/match-phase.interface';
 import { TeamService } from '../services/team.service';
+import { PlayerService } from '../services/player.service';
 import { Team } from '../models/team.interface';
 import { MatchEventService } from '../services/match-event.service';
 import { MatchEvent } from '../models/match-event.interface';
+interface UpdateMatchDTO {
+  status: MatchStatus;
+  matchDate?: string;
+  homeTeamGoals?: number;
+  awayTeamGoals?: number;
+}
 
 @Component({
   selector: 'app-jogos',
@@ -35,17 +42,12 @@ export class JogosComponent implements OnInit {
   teamNames: { [key: number]: string } = {};
   championshipData: Championship | null = null;
   showCreateMatchModal = false;
-  availableTeams: Team[] = [];
-  newMatch: Partial<Match> = {
-    championshipId: undefined,
-    homeTeamId: undefined,
-    awayTeamId: undefined,
-    matchDate: '',
-    round: 1,
-    status: 'SCHEDULED',
-  };
-
   showEditMatchModal = false;
+  showEventForm = false;
+  availableTeams: Team[] = [];
+  availablePlayers: any[] = [];
+  playerNames: { [key: number]: string } = {};
+
   selectedMatch: Match = {
     championshipId: 0,
     homeTeamId: 0,
@@ -56,12 +58,31 @@ export class JogosComponent implements OnInit {
     homeTeamGoals: 0,
     awayTeamGoals: 0,
   };
+
+  newMatch: Partial<Match> = {
+    championshipId: undefined,
+    homeTeamId: undefined,
+    awayTeamId: undefined,
+    matchDate: '',
+    round: 1,
+    status: 'SCHEDULED',
+  };
+
+  newEvent: MatchEvent = {
+    matchId: 0,
+    eventType: 'GOAL',
+    playerId: 0,
+    eventMinute: 0,
+    observation: '',
+  };
+
   matchEvents: MatchEvent[] = [];
 
   constructor(
     private matchService: MatchService,
     private championshipService: ChampionshipService,
     private teamService: TeamService,
+    private playerService: PlayerService,
     private matchEventService: MatchEventService
   ) {}
 
@@ -140,6 +161,28 @@ export class JogosComponent implements OnInit {
     });
   }
 
+  loadPlayersForMatch() {
+    if (this.selectedMatch) {
+      this.playerService
+        .getPlayersByTeam(this.selectedMatch.homeTeamId)
+        .subscribe({
+          next: (response) => {
+            this.availablePlayers = [...response.content];
+            this.playerService
+              .getPlayersByTeam(this.selectedMatch.awayTeamId)
+              .subscribe({
+                next: (response) => {
+                  this.availablePlayers = [
+                    ...this.availablePlayers,
+                    ...response.content,
+                  ];
+                },
+              });
+          },
+        });
+    }
+  }
+
   organizarMatchesEmFases() {
     this.fases = [
       {
@@ -181,6 +224,11 @@ export class JogosComponent implements OnInit {
     ];
   }
 
+  openCreateMatchModal() {
+    this.showCreateMatchModal = true;
+    this.loadAvailableTeams();
+  }
+
   closeCreateMatchModal() {
     this.showCreateMatchModal = false;
     this.resetNewMatch();
@@ -188,12 +236,9 @@ export class JogosComponent implements OnInit {
 
   loadAvailableTeams() {
     if (this.selectedCampeonato) {
-      this.availableTeams = [];
-
       this.teamService.getTeams().subscribe({
         next: (response) => {
           this.availableTeams = response.content;
-          console.log('Times disponíveis:', this.availableTeams);
         },
         error: (error) => {
           console.error('Erro ao carregar times:', error);
@@ -202,20 +247,12 @@ export class JogosComponent implements OnInit {
     }
   }
 
-  openCreateMatchModal() {
-    console.log('Abrindo modal...');
-    this.showCreateMatchModal = true;
-    this.loadAvailableTeams();
-  }
-
   async createMatch() {
     if (this.validateNewMatch() && this.selectedCampeonato) {
       this.championshipService
         .getChampionshipById(this.selectedCampeonato)
         .subscribe({
           next: (championship) => {
-            console.log('Status do campeonato:', championship.status);
-
             if (championship.status !== 'IN_PROGRESS') {
               const updatedChampionship: Championship = {
                 id: championship.id,
@@ -273,6 +310,7 @@ export class JogosComponent implements OnInit {
       },
     });
   }
+
   validateNewMatch(): boolean {
     if (!this.newMatch.homeTeamId || !this.newMatch.awayTeamId) {
       alert('Selecione os times da partida');
@@ -322,6 +360,7 @@ export class JogosComponent implements OnInit {
     this.matchEventService.getMatchEvents(matchId).subscribe({
       next: (response) => {
         this.matchEvents = response.content;
+        this.loadPlayersForMatch();
       },
       error: (error) => {
         console.error('Erro ao carregar eventos:', error);
@@ -330,21 +369,176 @@ export class JogosComponent implements OnInit {
   }
 
   updateMatch() {
+    if (!this.validateMatchUpdate()) return;
+
     if (this.selectedMatch?.id) {
+      const statusMap: { [key: string]: MatchStatus } = {
+        '1': 'SCHEDULED',
+        '2': 'IN_PROGRESS',
+        '3': 'FINISHED',
+        '4': 'CANCELLED',
+      };
+
+      const updateData: UpdateMatchDTO = {
+        status:
+          statusMap[this.selectedMatch.status] || this.selectedMatch.status,
+        homeTeamGoals: this.selectedMatch.homeTeamGoals || 0,
+        awayTeamGoals: this.selectedMatch.awayTeamGoals || 0,
+        matchDate: this.selectedMatch.matchDate,
+      };
+
+      console.log('Dados de atualização:', updateData);
+
       this.matchService
-        .updateMatch(this.selectedMatch.id, this.selectedMatch)
+        .updateMatch(this.selectedMatch.id, updateData)
         .subscribe({
-          next: () => {
+          next: (updatedMatch) => {
+            console.log('Partida atualizada:', updatedMatch);
             if (this.selectedCampeonato) {
+              const matchIndex = this.matches.findIndex(
+                (m) => m.id === this.selectedMatch.id
+              );
+              if (matchIndex !== -1) {
+                this.matches[matchIndex] = {
+                  ...this.matches[matchIndex],
+                  ...updateData,
+                };
+              }
+
               this.loadMatches(this.selectedCampeonato);
             }
             this.closeEditMatchModal();
+            alert('Partida atualizada com sucesso!');
           },
           error: (error) => {
-            console.error('Erro ao atualizar partida:', error);
+            console.error('Erro detalhado:', error.error);
+            console.error('Status:', error.status);
+            console.error('Mensagem:', error.error?.message);
+            alert(error.error?.message || 'Erro ao atualizar a partida');
           },
         });
     }
+  }
+
+  validateMatchUpdate(): boolean {
+    if (this.selectedMatch.status === 'IN_PROGRESS') {
+      if (
+        this.selectedMatch.homeTeamGoals === undefined ||
+        this.selectedMatch.awayTeamGoals === undefined
+      ) {
+        alert('Para iniciar a partida, informe o placar inicial');
+        return false;
+      }
+    }
+
+    if (this.selectedMatch.status === 'FINISHED') {
+      if (
+        this.selectedMatch.homeTeamGoals === undefined ||
+        this.selectedMatch.awayTeamGoals === undefined ||
+        this.matchEvents.length === 0
+      ) {
+        alert(
+          'Para finalizar a partida, informe o placar e registre pelo menos um evento'
+        );
+        return false;
+      }
+    }
+    return true;
+  }
+
+  openAddEventForm() {
+    this.showEventForm = true;
+    this.loadPlayersForMatch();
+  }
+
+  closeEventForm() {
+    this.showEventForm = false;
+    this.resetNewEvent();
+  }
+
+  resetNewEvent() {
+    this.newEvent = {
+      matchId: this.selectedMatch.id || 0,
+      eventType: 'GOAL',
+      playerId: 0,
+      eventMinute: 0,
+      observation: '',
+    };
+  }
+
+  saveEvent() {
+    if (!this.validateEvent()) return;
+
+    const eventData: MatchEvent = {
+      matchId: this.selectedMatch.id!,
+      eventType: this.newEvent.eventType,
+      playerId: Number(this.newEvent.playerId),
+      eventMinute: this.newEvent.eventMinute,
+      observation: this.newEvent.observation || '',
+    };
+
+    console.log('Evento antes de enviar:', eventData);
+
+    this.matchEventService.createMatchEvent(eventData).subscribe({
+      next: () => {
+        if (this.selectedMatch.id) {
+          if (this.newEvent.eventType === 'GOAL') {
+            const player = this.availablePlayers.find(
+              (p) => p.id === this.newEvent.playerId
+            );
+            if (player) {
+              if (player.teamId === this.selectedMatch.homeTeamId) {
+                this.selectedMatch.homeTeamGoals =
+                  (this.selectedMatch.homeTeamGoals || 0) + 1;
+              } else if (player.teamId === this.selectedMatch.awayTeamId) {
+                this.selectedMatch.awayTeamGoals =
+                  (this.selectedMatch.awayTeamGoals || 0) + 1;
+              }
+            }
+          }
+          this.loadMatchEvents(this.selectedMatch.id);
+
+          if (this.newEvent.eventType === 'GOAL') {
+            this.updateMatch();
+          }
+        }
+        this.closeEventForm();
+      },
+      error: (error) => {
+        console.error('Erro detalhado:', error.error);
+        console.error('Status:', error.status);
+        console.error('Mensagem:', error.error?.message);
+        const errorMessage =
+          error.error?.errors?.eventMinute ||
+          error.error?.message ||
+          'Erro ao salvar evento da partida';
+        alert(errorMessage);
+      },
+    });
+  }
+
+  validateEvent(): boolean {
+    if (!this.newEvent.playerId) {
+      alert('Selecione um jogador');
+      return false;
+    }
+    if (!this.newEvent.eventType) {
+      alert('Selecione o tipo de evento');
+      return false;
+    }
+    if (
+      !this.newEvent.eventMinute ||
+      this.newEvent.eventMinute < 0 ||
+      this.newEvent.eventMinute > 90
+    ) {
+      alert('O minuto deve estar entre 0 e 90');
+      return false;
+    }
+    if (!this.selectedMatch.id) {
+      alert('Erro: ID da partida não encontrado');
+      return false;
+    }
+    return true;
   }
 
   removeEvent(eventId: number | undefined) {
@@ -398,8 +592,9 @@ export class JogosComponent implements OnInit {
     };
     return eventTypes[eventType as keyof typeof eventTypes] || eventType;
   }
-  playerNames: { [key: number]: string } = {};
+
   getPlayerName(playerId: number): string {
-    return `Jogador ${playerId}`;
+    const player = this.availablePlayers.find((p) => p.id === playerId);
+    return player ? player.name : `Jogador ${playerId}`;
   }
 }
