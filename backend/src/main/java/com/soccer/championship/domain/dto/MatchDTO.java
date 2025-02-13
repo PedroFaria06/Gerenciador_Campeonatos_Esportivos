@@ -21,8 +21,10 @@ public record MatchDTO(
     @NotNull(message = "A data da partida é obrigatória")
     LocalDateTime matchDate,
 
+    @PositiveOrZero(message = "O número de gols do time mandante deve ser maior ou igual a zero")
     Integer homeTeamGoals,
 
+    @PositiveOrZero(message = "O número de gols do time visitante deve ser maior ou igual a zero")
     Integer awayTeamGoals,
 
     @NotNull(message = "O status da partida é obrigatório")
