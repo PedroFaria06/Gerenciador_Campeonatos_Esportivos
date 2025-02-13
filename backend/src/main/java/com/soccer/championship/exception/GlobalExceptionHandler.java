@@ -63,6 +63,6 @@ public class GlobalExceptionHandler {
     }
 
     record ErrorResponse(int status, String message, LocalDateTime timestamp) {}
-    
+
     record ValidationErrorResponse(int status, String message, LocalDateTime timestamp, Map<String, String> errors) {}
 }

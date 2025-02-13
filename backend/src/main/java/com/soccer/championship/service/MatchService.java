@@ -64,6 +64,8 @@ public class MatchService {
     validateRound(matchDTO);
 
     Match match = matchMapper.toEntity(matchDTO);
+    match.setHomeTeamGoals(0);
+    match.setAwayTeamGoals(0);
     match = matchRepository.save(match);
     return matchMapper.toDTO(match);
   }
