@@ -24,7 +24,9 @@ public enum MatchEventType {
 
     PENALTY_MISSED("6", "Pênalti perdido"),
 
-    PENALTY_SCORED("7", "Pênalti convertido");
+    PENALTY_SCORED("7", "Pênalti convertido"),
+
+    FAULT("8", "Falta");
 
   private final String codigo;
   private final String descricao;
