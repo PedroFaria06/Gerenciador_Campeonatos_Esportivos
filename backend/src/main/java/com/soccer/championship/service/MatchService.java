@@ -62,6 +62,7 @@ public class MatchService {
     validateChampionship(matchDTO.championshipId());
     validateTeams(matchDTO);
     validateRound(matchDTO);
+    validateTeamsInChampionship(matchDTO);
 
     Match match = matchMapper.toEntity(matchDTO);
     match.setHomeTeamGoals(0);
@@ -221,5 +222,20 @@ public class MatchService {
     // Salva as atualizações
     championshipTeamRepository.save(homeTeamStats);
     championshipTeamRepository.save(awayTeamStats);
+  }
+
+  private void validateTeamsInChampionship(MatchDTO matchDTO) {
+    Championship championship = championshipRepository.findById(matchDTO.championshipId())
+      .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado com ID: " + matchDTO.championshipId()));
+
+    boolean homeTeamInChampionship = championship.getTeams().stream()
+      .anyMatch(championshipTeam -> championshipTeam.getTeam().getId().equals(matchDTO.homeTeamId()));
+
+    boolean awayTeamInChampionship = championship.getTeams().stream()
+      .anyMatch(championshipTeam -> championshipTeam.getTeam().getId().equals(matchDTO.awayTeamId()));
+
+    if (!homeTeamInChampionship || !awayTeamInChampionship) {
+      throw new BusinessException("Ambos os times precisam estar cadastrados no campeonato");
+    }
   }
 }
