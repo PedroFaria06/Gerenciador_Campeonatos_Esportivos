@@ -7,4 +7,4 @@ export interface MatchEvent {
   observation?: string;
 }
 
-export type EventType = 'GOAL' | 'YELLOW_CARD' | 'RED_CARD' | 'SUBSTITUTION';
+export type EventType = 'GOAL' | 'YELLOW_CARD' | 'RED_CARD' | 'SUBSTITUTION' | 'PENALTY_MISSED' | 'PENALTY_SCORED';

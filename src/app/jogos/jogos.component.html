@@ -176,9 +176,11 @@
                       <option value="GOAL">Gol</option>
                       <option value="YELLOW_CARD">Cartão Amarelo</option>
                       <option value="RED_CARD">Cartão Vermelho</option>
+                      <option value="PENALTY_MISSED">Pênalti Perdido</option>
+                      <option value="PENALTY_SCORED">Pênalti Convertido</option>
                   </select>
               </div>
-          
+
               <div class="form-group">
                   <label>Jogador:</label>
                   <select [(ngModel)]="newEvent.playerId" name="playerId" required>
@@ -188,18 +190,18 @@
                       </option>
                   </select>
               </div>
-          
+
               <div class="form-group">
                   <label>Minuto:</label>
-                  <input type="number" [(ngModel)]="newEvent.eventMinute" name="minute" 
+                  <input type="number" [(ngModel)]="newEvent.eventMinute" name="minute"
                          min="0" max="90" required>
               </div>
-          
+
               <div class="form-group">
                   <label>Observação:</label>
                   <input type="text" [(ngModel)]="newEvent.observation" name="observation">
               </div>
-          
+
               <div class="button-group">
                   <button type="button" (click)="saveEvent()">Adicionar</button>
                   <button type="button" (click)="closeEventForm()">Cancelar</button>
@@ -210,7 +212,7 @@
                 <h3>Eventos da Partida</h3>
                 <ul>
                     <li *ngFor="let event of matchEvents">
-                        {{ event.eventMinute }}' - {{ getEventTypeDescription(event.eventType) }} - 
+                        {{ event.eventMinute }}' - {{ getEventTypeDescription(event.eventType) }} -
                         {{ getPlayerName(event.playerId) }}
                         <button class="btn-remove" (click)="removeEvent(event.id)">×</button>
                     </li>
