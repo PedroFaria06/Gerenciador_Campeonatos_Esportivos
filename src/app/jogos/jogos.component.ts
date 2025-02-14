@@ -591,7 +591,6 @@ export class JogosComponent implements OnInit {
       SUBSTITUTION: 'Substituição',
       PENALTY_MISSED: 'Pênalti perdido',
       PENALTY_SCORED: 'Pênalti convertido',
-      FAULT: 'Falta',
     };
     return eventTypes[eventType as keyof typeof eventTypes] || eventType;
   }
