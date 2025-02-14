@@ -14,7 +14,7 @@ export class PlayerService {
 
   constructor(private http: HttpClient) {}
 
-  getPlayers(page = 0, size = 10): Observable<PageResponse<Player>> {
+  getPlayers(page = 0, size = 1000): Observable<PageResponse<Player>> {
     return this.http.get<PageResponse<Player>>(
       `${this.apiUrl}?page=${page}&size=${size}`
     );
@@ -27,7 +27,7 @@ export class PlayerService {
   getPlayersByTeam(
     teamId: number,
     page = 0,
-    size = 10
+    size = 1000
   ): Observable<PageResponse<Player>> {
     return this.http.get<PageResponse<Player>>(
       `${this.apiUrl}/team/${teamId}?page=${page}&size=${size}`

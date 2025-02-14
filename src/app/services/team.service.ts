@@ -13,7 +13,7 @@ export class TeamService {
 
   constructor(private http: HttpClient) {}
 
-  getTeams(page = 0, size = 10): Observable<PageResponse<Team>> {
+  getTeams(page = 0, size = 100): Observable<PageResponse<Team>> {
     return this.http.get<PageResponse<Team>>(
       `${this.apiUrl}?page=${page}&size=${size}`
     );
