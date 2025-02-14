@@ -43,7 +43,7 @@ public class ChampionshipService {
     return championshipRepository.findByStatus(status, pageable)
       .map(championshipMapper::toDTO);
   }
-  
+
 
   @Transactional(readOnly = true)
   public ChampionshipDTO findById(Long id) {
@@ -79,39 +79,39 @@ public class ChampionshipService {
   @Transactional
   public ChampionshipDTO create(ChampionshipDTO championshipDTO) {
       log.debug("Criando novo campeonato: {}", championshipDTO);
-  
+
       validateNameAndSeason(championshipDTO);
-  
+
       Championship championship = championshipMapper.toEntity(championshipDTO);
-  
+
       if (championshipDTO.teamIds() != null && !championshipDTO.teamIds().isEmpty()) {
           addTeamsToChampionship(championship, championshipDTO.teamIds());
       }
-  
+
       championship = championshipRepository.save(championship);
       log.debug("Campeonato criado com sucesso: {}", championship);
       return championshipMapper.toDTO(championship);
   }
-  
+
 
   @Transactional
   public ChampionshipDTO update(Long id, ChampionshipDTO championshipDTO) {
       try {
           log.error("Dados recebidos: ID={}, DTO={}", id, championshipDTO);
-          
+
           Championship championship = championshipRepository.findById(id)
               .orElseThrow(() -> new ResourceNotFoundException("Campeonato não encontrado"));
-          
+
           log.error("Campeonato encontrado antes da atualização: {}", championship);
-          
+
           championshipMapper.updateEntity(championshipDTO, championship);
-          
+
           log.error("Campeonato após mapeamento: {}", championship);
-          
+
           championship = championshipRepository.save(championship);
-          
+
           log.error("Campeonato salvo: {}", championship);
-          
+
           return championshipMapper.toDTO(championship);
       } catch (Exception e) {
           log.error("Erro na atualização do campeonato: ", e);
@@ -145,7 +145,14 @@ public class ChampionshipService {
       throw new ResourceNotFoundException("Um ou mais times não foram encontrados");
     }
 
-    teams.forEach(championship::addTeam);
+    for (Team team : teams) {
+      boolean teamExists = championship.getTeams().stream()
+        .anyMatch(championshipTeam -> championshipTeam.getTeam().equals(team));
+      if (teamExists) {
+        throw new BusinessException("O time " + team.getName() + " já está cadastrado no campeonato");
+      }
+      championship.addTeam(team);
+    }
 
     championshipRepository.save(championship);
   }
