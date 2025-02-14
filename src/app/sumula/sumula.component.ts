@@ -211,6 +211,7 @@ export class SumulaComponent implements OnInit {
       SUBSTITUTION: 'Substituição',
       PENALTY_MISSED: 'Pênalti perdido',
       PENALTY_SCORED: 'Pênalti convertido',
+      FAULT: 'Falta',
     };
     return typeMap[type];
   }
