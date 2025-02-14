@@ -589,6 +589,8 @@ export class JogosComponent implements OnInit {
       YELLOW_CARD: 'Cartão Amarelo',
       RED_CARD: 'Cartão Vermelho',
       SUBSTITUTION: 'Substituição',
+      PENALTY_MISSED: 'Pênalti perdido',
+      PENALTY_SCORED: 'Pênalti convertido',
     };
     return eventTypes[eventType as keyof typeof eventTypes] || eventType;
   }
